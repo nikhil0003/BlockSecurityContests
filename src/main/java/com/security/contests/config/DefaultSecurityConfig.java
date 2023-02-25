@@ -59,7 +59,7 @@ public class DefaultSecurityConfig {
 		 http.authorizeHttpRequests(authorize ->
 				authorize.anyRequest().authenticated().and()
 			)
-			.formLogin().loginPage("/login").permitAll();
+			.formLogin().loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/home");
 		
 		return http.build();
 	}

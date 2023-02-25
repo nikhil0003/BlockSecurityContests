@@ -31,11 +31,10 @@ public class BlockSecurityContestsApplication implements CommandLineRunner {
 		User user1 = new User();
 		user1.setUsername("admin");
 		user1.setPassword(SecurityUtility.passwordEncoder().encode("admin"));
-		user1.setEmail("admin@gmail.com");
+	
 		Set<UserRole> userRoles = new HashSet<>();
 		Role role1= new Role();
-		role1.setRoleId(0);
-		role1.setName("ROLE_ADMIN");
+		role1.setName("admin");
 		userRoles.add(new UserRole(user1, role1));
 		
 		userService.createUser(user1, userRoles);
