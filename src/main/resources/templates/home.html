@@ -164,11 +164,17 @@ a:hover {
 	color: red;
 	margin: 10px;
 }
+.successful {
+	color: #008000;
+	margin: 10px;
+}
 </style>
 </head>
 
 <body>
 	<div class="form">
+	<div class="successful" th:if="refresh"> DataBase Initialized   
+			</div>
 		<form th:action="@{/refreshData}" method="post">
 			<div class="title">Home</div>
 			<div class="subtitle">Welcome 
