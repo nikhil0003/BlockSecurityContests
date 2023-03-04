@@ -25,7 +25,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
 
@@ -33,59 +33,58 @@ public class UserController {
 	public String login() {
 		return "login";
 	}
-	
+
 	@GetMapping("/createAccount")
 	public String createAccount() {
 		return "createAccount";
 	}
+
 	@GetMapping("/forgetPassword")
 	public String forgetPassword() {
 		return "forgetpassword";
 	}
-	
+
 	@GetMapping("/badRequest")
 	public String badRequest() {
 		return "badRequestPage";
 	}
-	
-	
 
 	@PostMapping(value = "/createAccount")
-	public String newUserPost(HttpServletRequest request,
-			@ModelAttribute("username") String username,
-			@ModelAttribute("password") String password,
-			@ModelAttribute("role") String role, 
-			@ModelAttribute("confirmpassword") String confirmpassword, 
-			Model model)
-			throws Exception {
-		if(!password.equals(confirmpassword)) {
-			model.addAttribute("passwordMismatch", true);
+	public String newUserPost(HttpServletRequest request, @ModelAttribute("username") String username,
+			@ModelAttribute("password") String password, @ModelAttribute("role") String role,
+			@ModelAttribute("confirmpassword") String confirmpassword, Model model) throws Exception {
+		if (!(password != null && username != null)) {
+			model.addAttribute("enterDetails", true);
 			return "createAccount";
-		}
-		if (userService.findByUsername(username) != null) {
-			model.addAttribute("usernameExists", true);
+		} else {
+			if (!password.equals(confirmpassword)) {
+				model.addAttribute("passwordMismatch", true);
+				return "createAccount";
+			}
+			if (userService.findByUsername(username) != null) {
+				model.addAttribute("usernameExists", true);
+				return "createAccount";
+			}
+
+			User user = new User();
+			user.setUsername(username);
+			String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+			user.setPassword(encryptedPassword);
+			Role role1 = new Role();
+			Role roledb = roleRepository.findByname(role);
+			if (roledb != null && roledb.getName() != null && roledb.getName().equals(role)) {
+				role1 = roledb;
+			} else {
+				role1.setName(role);
+			}
+			Set<UserRole> userRoles = new HashSet<>();
+			userRoles.add(new UserRole(user, role1));
+			userService.createUser(user, userRoles);
+			model.addAttribute("createdAccount", "true");
 			return "createAccount";
+
 		}
-		
-		
-		User user = new User();
-		user.setUsername(username);
-		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-		user.setPassword(encryptedPassword);
-		Role role1 = new Role();
-		Role roledb = roleRepository.findByname(role);
-		if(roledb !=null && roledb.getName() !=null &&roledb.getName().equals(role)) {
-			role1 = roledb;
-		}
-		else {
-			role1.setName(role);
-		}
-		Set<UserRole> userRoles = new HashSet<>();
-		userRoles.add(new UserRole(user, role1));
-		userService.createUser(user, userRoles);
-		model.addAttribute("createdAccount", "true");
-		return "createAccount";
+
 	}
 
-	
 }
