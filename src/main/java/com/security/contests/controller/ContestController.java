@@ -52,11 +52,11 @@ public class ContestController {
 
 	@GetMapping("/home")
 	public String test(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
-		user.getUserRoles().forEach(i -> {
-			if (i.getRole().getName().equals("admin")) {
-				model.addAttribute("isAdmin", true);
-			}
-		});
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& user.getUserRoles().getRole().getName().equals("admin")) {
+			model.addAttribute("isAdmin", true);
+		}
 		return "home";
 	}
 

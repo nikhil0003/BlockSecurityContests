@@ -1,8 +1,5 @@
 package com.security.contests.controller;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.security.contests.config.SecurityUtility;
-import com.security.contests.config.UserSecurityService;
 import com.security.contests.domain.Role;
 import com.security.contests.domain.User;
 import com.security.contests.domain.UserRole;
@@ -77,9 +73,9 @@ public class UserController {
 			} else {
 				role1.setName(role);
 			}
-			Set<UserRole> userRoles = new HashSet<>();
-			userRoles.add(new UserRole(user, role1));
-			userService.createUser(user, userRoles);
+			UserRole ur = new UserRole(user, role1);
+			user.setUserRoles(ur);
+			userService.createUser(user, ur);
 			model.addAttribute("createdAccount", "true");
 			return "createAccount";
 

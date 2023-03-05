@@ -25,20 +25,16 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 	
+	
 
 	@Override
-	public User createUser(User user, Set<UserRole> userRoles) {
+	public User createUser(User user,UserRole userRoles) {
 		User localUser = userRepository.findByUsername(user.getUsername());
 
 		if (localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
 		} else {
-			for (UserRole ur : userRoles) {
-				roleRepository.save(ur.getRole());
-			}
-
-			user.getUserRoles().addAll(userRoles);
-
+			roleRepository.save(userRoles.getRole());
 			localUser = userRepository.save(user);
 		}
 
