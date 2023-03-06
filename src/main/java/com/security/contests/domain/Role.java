@@ -9,25 +9,25 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Role {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int roleId;
+	private Long roleId;
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "role", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	private Set<UserRole> userRoles = new HashSet<>();
+	@OneToOne(mappedBy = "role", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private UserRole userRoles;
 
-	public int getRoleId() {
+	public Long getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
 	}
 
@@ -39,13 +39,20 @@ public class Role {
 		this.name = name;
 	}
 
-	public Set<UserRole> getUserRoles() {
+	/**
+	 * @return the userRoles
+	 */
+	public UserRole getUserRoles() {
 		return userRoles;
 	}
 
-	public void setUserRoles(Set<UserRole> userRoles) {
+	/**
+	 * @param userRoles the userRoles to set
+	 */
+	public void setUserRoles(UserRole userRoles) {
 		this.userRoles = userRoles;
 	}
+
 	
 	
 }

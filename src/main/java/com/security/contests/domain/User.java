@@ -16,7 +16,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -37,9 +36,9 @@ public class User implements UserDetails{
 	private String phone;
 	private boolean enabled=true;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnore
-	private Set<UserRole> userRoles = new HashSet<>();
+	private UserRole userRoles;
 	
 	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
@@ -84,12 +83,7 @@ public class User implements UserDetails{
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	public Set<UserRole> getUserRoles() {
-		return userRoles;
-	}
-	public void setUserRoles(Set<UserRole> userRoles) {
-		this.userRoles = userRoles;
-	}
+
 	
 	/**
 	 * @return the name
@@ -139,11 +133,24 @@ public class User implements UserDetails{
 	public void setWallet(Wallet wallet) {
 		this.wallet = wallet;
 	}
+	
+	
+	/**
+	 * @return the userRoles
+	 */
+	public UserRole getUserRoles() {
+		return userRoles;
+	}
+	/**
+	 * @param userRoles the userRoles to set
+	 */
+	public void setUserRoles(UserRole userRoles) {
+		this.userRoles = userRoles;
+	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorites = new HashSet<>();
-		userRoles.forEach(ur -> authorites.add(new Authority(ur.getRole().getName())));
-		
+	    authorites.add(new Authority(userRoles.getRole().getName()));
 		return authorites;
 	}
 	@Override

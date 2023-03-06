@@ -181,6 +181,8 @@ a:hover {
 				exists</div>
 			<div class="error" th:if="${passwordMismatch}">Password Mismatch 
 			</div>
+			<div class="error" th:if="${enterDetails}">Please Enter All Fields 
+			</div>
 			<div class="successful" th:if="${createdAccount}">User Account
 				Created</div>
 			<div class="input-container ic1">
@@ -211,7 +213,7 @@ a:hover {
 						<option value="sponser">Sponser</option>
 						<option value="contestant">Contestant</option>
 						<option value="judge">Judge</option>
-						<option value="admin">Admin</option>
+						<option value="admin">Root</option>
 					</select>
 				</div>
 

@@ -178,7 +178,7 @@ a:hover {
 		<form th:action="@{/refreshData}" method="post">
 			<div class="title">Home</div>
 			<div class="subtitle">Welcome 
-			<span th:if="${isAdmin}"  >Admin </span> User</div>
+			<span th:if="${isAdmin}"  >Root </span> User</div>
 			<button th:if="${isAdmin}"  type="submit" class="submit">Initialize DataBase</button>
 		</form>
 		<form th:action="@{/logout}" method="post">
