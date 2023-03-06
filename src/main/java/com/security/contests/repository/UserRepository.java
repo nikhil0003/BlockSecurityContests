@@ -12,8 +12,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	User findByUsername(@Param("username") String username);
 	
 	
-	@Query(value="INSERT INTO securitycontest.user(username,password,enabled)  values(\"hello1\" ,\"he;lo1\",true)",nativeQuery = true)
-    void saveUserData(@Param("username") String username,@Param("password") String password);
+//	@Query(value="INSERT INTO securitycontest.user(username,password,enabled)  values(\"hello1\" ,\"he;lo1\",true)",nativeQuery = true)
+//    void saveUserData(@Param("username") String username,@Param("password") String password);
 	
 	
 	

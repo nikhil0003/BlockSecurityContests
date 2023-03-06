@@ -62,15 +62,17 @@ public class ContestController {
 
 	@PostMapping(value = "/refreshData")
 	public String referData(HttpServletRequest request, Model model) throws Exception {
-		WalletRepositry.deleteAll();
-		LedgerRepositry.deleteAll();
-		contestRepositry.deleteAll();
-		contestantRepositry.deleteAll();
-		JudgeRepositry.deleteAll();
-		SponserRepositry.deleteAll();
-		UserRepository.deleteAll();
-		UserRoleRepositry.deleteAll();
-		RoleRepository.deleteAll();
+//		WalletRepositry.deleteAll();
+//		LedgerRepositry.deleteAll();
+//		contestRepositry.deleteAll();
+//		contestantRepositry.deleteAll();
+//		JudgeRepositry.deleteAll();
+//		SponserRepositry.deleteAll();
+//		UserRepository.deleteAll();
+//		UserRoleRepositry.deleteAll();
+//		RoleRepository.deleteAll();
+		
+		
 		model.addAttribute("isAdmin", true);
 		model.addAttribute("refresh", true);
 

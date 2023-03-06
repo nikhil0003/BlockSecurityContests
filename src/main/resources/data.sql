@@ -2,6 +2,8 @@ use securitycontest;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS user,role,user_role,contest,contestant,judge,ledger,sponser,wallet;
+
 
 CREATE TABLE `user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -11,14 +13,14 @@ CREATE TABLE `user` (
   `phone` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `role` (
   `role_id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `user_role` (
@@ -94,11 +96,6 @@ CREATE TABLE `wallet` (
   UNIQUE KEY `UK_3y9jbtvtnd4rm8xk3iu4wi6up` (`address`),
   KEY `FKbs4ogwiknsup4rpw8d47qw9dx` (`user_id`),
   CONSTRAINT `FKbs4ogwiknsup4rpw8d47qw9dx` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---SET FOREIGN_KEY_CHECKS = 0;
---ALTER TABLE  `user` MODIFY COLUMN `id`  bigint NOT NULL AUTO_INCREMENT;
---
--- ALTER TABLE  `role` MODIFY COLUMN  `role_id` bigint NOT NULL AUTO_INCREMENT;
--- 
---  ALTER TABLE  `user_role` MODIFY COLUMN   `user_role_id` bigint NOT NULL AUTO_INCREMENT;
+SET FOREIGN_KEY_CHECKS = 1;
