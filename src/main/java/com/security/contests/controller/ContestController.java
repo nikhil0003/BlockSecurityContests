@@ -18,6 +18,11 @@ public class ContestController {
 	@Autowired
 	private MyDataBaseConfiguration myDataBaseConfiguration;
 
+	@GetMapping("/")
+	public String index(Model model) {
+		return "redirect:/home";
+	}
+
 	@GetMapping("/home")
 	public String test(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
@@ -25,7 +30,17 @@ public class ContestController {
 				&& user.getUserRoles().getRole().getName().equals("admin")) {
 			model.addAttribute("isAdmin", true);
 		}
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& user.getUserRoles().getRole().getName().equals("sponser")) {
+			model.addAttribute("isSponser", true);
+		}
 		return "home";
+	}
+
+	@GetMapping("/createContest")
+	public String createContest() {
+		return "createContest";
 	}
 
 	@PostMapping(value = "/refreshData")

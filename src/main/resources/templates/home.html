@@ -130,6 +130,19 @@ body {
 	text-align: center;
 	width: 100%;
 }
+button[type=""] {
+	background-color: #08d;
+	border-radius: 12px;
+	border: 0;
+	box-sizing: border-box;
+	color: #eee;
+	cursor: pointer;
+	font-size: 18px;
+	height: 50px;
+	margin-top: 38px;
+	text-align: center;
+	width: 100%;
+}
 
 .submit:active {
 	background-color: #06b;
@@ -173,7 +186,7 @@ a:hover {
 
 <body>
 	<div class="form">
-	<div class="successful" th:if="refresh"> DataBase Initialized   
+	<div class="successful"th:if="${refresh}"> DataBase Initialized   
 			</div>
 		<form th:action="@{/refreshData}" method="post">
 			<div class="title">Home</div>
@@ -181,6 +194,9 @@ a:hover {
 			<span th:if="${isAdmin}"  >Root </span> User</div>
 			<button th:if="${isAdmin}"  type="submit" class="submit">Initialize DataBase</button>
 		</form>
+		<a  th:if="${isSponser}" th:href="@{/createContest}"> 
+         <button type="button">Sponser</button> 
+         </a>
 		<form th:action="@{/logout}" method="post">
 			<button type="submit" class="submit">Logout</button>
 		</form>

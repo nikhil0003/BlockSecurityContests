@@ -29,7 +29,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * @author Nikhil
  * @since 0.1.0
  */
 @EnableWebSecurity
@@ -56,11 +55,9 @@ public class DefaultSecurityConfig {
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		cr.corsCustomizer(http);
-		 http.authorizeHttpRequests(authorize ->
-				authorize.anyRequest().authenticated().and()
-			)
-			.formLogin().loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/home");
-		
+		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated().and()).formLogin()
+				.loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/home");
+
 		return http.build();
 	}
 	

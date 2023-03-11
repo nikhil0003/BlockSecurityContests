@@ -67,12 +67,7 @@ public class UserController {
 			String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
 			user.setPassword(encryptedPassword);
 			Role role1 = new Role();
-			Role roledb = roleRepository.findByname(role);
-			if (roledb != null && roledb.getName() != null && roledb.getName().equals(role)) {
-				role1 = roledb;
-			} else {
-				role1.setName(role);
-			}
+			role1.setName(role);
 			UserRole ur = new UserRole(user, role1);
 			user.setUserRoles(ur);
 			userService.createUser(user, ur);

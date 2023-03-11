@@ -9,8 +9,6 @@ import com.security.contests.domain.Role;
 
 public interface RoleRepository extends CrudRepository<Role, Long> {
 	
-	@Query(value ="select * from role where name = :name",nativeQuery = true)
-	Role findByname(String name);
 	
 	@Query(value ="select * from role where role_Id = :roleId",nativeQuery = true)
 	Role findByRoleId(@Param("roleId") Long roleId);

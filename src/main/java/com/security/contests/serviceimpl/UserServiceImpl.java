@@ -38,13 +38,23 @@ public class UserServiceImpl implements UserService {
 
 		if (localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
+			Role roledb = customDao.findByname(user.getUserRoles().getRole().getName());
+			localUser.getUserRoles().setRole(roledb);
+			
 		} else {
 			userSuccess = customDao.saveUserData(user.getUsername(), user.getPassword());
+			localUser = userRepository.findByUsername(user.getUsername());
 			if (userSuccess != 0) {
-				roleSuccess = customDao.saveRoleData(user.getUserRoles().getRole().getName());
-				if (roleSuccess != 0) {
-					localUser = userRepository.findByUsername(user.getUsername());
-					Role roledb = roleRepository.findByname(user.getUserRoles().getRole().getName());
+				Role roledb = customDao.findByname(user.getUserRoles().getRole().getName());
+				if (roledb == null) {
+					// save role
+					roleSuccess = customDao.saveRoleData(user.getUserRoles().getRole().getName());
+					if (roleSuccess != 0) {
+						roledb = customDao.findByname(user.getUserRoles().getRole().getName());
+						userRoleSuccess = customDao.saveUserRoleData(localUser.getId(), roledb.getRoleId());
+						localUser.setUserRoles(userRoles);
+					}
+				} else {
 					userRoleSuccess = customDao.saveUserRoleData(localUser.getId(), roledb.getRoleId());
 					localUser.setUserRoles(userRoles);
 				}
