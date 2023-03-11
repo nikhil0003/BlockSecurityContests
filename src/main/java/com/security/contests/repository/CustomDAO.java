@@ -1,7 +1,10 @@
 package com.security.contests.repository;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
+import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.Role;
 
 @Component
@@ -17,5 +20,7 @@ public interface CustomDAO {
 	
 	
 	Role findByRoleId(Long roleId);
+	
+	List<JudgeDisplay> listJudges();
 	
 }

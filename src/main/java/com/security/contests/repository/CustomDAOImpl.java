@@ -1,9 +1,13 @@
 package com.security.contests.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.Role;
 
 import jakarta.persistence.EntityManager;
@@ -77,6 +81,30 @@ public class CustomDAOImpl implements CustomDAO {
 		 role.setName((String)ob[1]);
 		 return role;
 
+	}
+	
+	@Override
+	public List<JudgeDisplay> listJudges() {
+		final String checkSql = "select count(*) from user u , user_role ur , role r where u.id = ur.user_id and "
+				+ "ur.role_id = r.role_id and r.name = 'judge'";
+		Query checkquery = em.createNativeQuery(checkSql);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select u.id, u.username from user u , user_role ur , role r where u.id = ur.user_id and "
+					+ "ur.role_id = r.role_id and r.name = 'judge'";
+			Query query = em.createNativeQuery(sql);
+			List<Object> objList =  query.getResultList();
+			List<JudgeDisplay> list = new ArrayList<JudgeDisplay>();
+			for(Object iter :  objList ) {
+				Object[] ob = (Object[])iter;
+				JudgeDisplay jd = new JudgeDisplay();
+				jd.setJudgeName((String)ob[1]);
+				jd.setJudgeUserId((Long)ob[0]);
+				list.add(jd);
+			}
+			return list;
+		}
+		return null;
 	}
 
 }

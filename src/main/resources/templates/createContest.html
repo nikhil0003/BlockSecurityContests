@@ -48,7 +48,7 @@ input[type=submit]:hover {
 	padding: 20px;
 }
 
-.col{
+.col {
 	width: 100%;
 	margin-top: 6px;
 }
@@ -73,26 +73,30 @@ input[type=submit]:hover {
 }
 
 #judge {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 #judge td, #judge th {
-  border: 1px solid #ddd;
-  padding: 8px;
+	border: 1px solid #ddd;
+	padding: 8px;
 }
 
-#judge tr:nth-child(even){background-color: #f2f2f2;}
+#judge tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
 
-#judge tr:hover {background-color: #ddd;}
+#judge tr:hover {
+	background-color: #ddd;
+}
 
 #judge th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04AA6D;
-  color: white;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #04AA6D;
+	color: white;
 }
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
@@ -137,28 +141,29 @@ input[type=submit]:hover {
 				</div>
 			</div>
 			<br>
-			<div>
-            <table id ="judge">
-            <tr>
-              <th> 
-              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-              </th>
-              <th>Judge</th>
-              <th>Address</th>
-            </tr>
-            <tr >
-              <td> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
-              <td >Judge NAme</td>
-              <td>Addressssss</td>
-            </tr>
-          <table>
-        </div>
-			<div class="row">
-				<input type="submit" value="Submit">
-			</div>
+				<table th:if="${ not#lists.isEmpty(jdlist)}" id="judge"  th:attr="data-jsdlist=${jdlist}">
+					<tr>
+						<th><input type="checkbox" id="selectAll" onclick = "fun()"></th>
+						<th>Judge Address</th>
+					</tr>
+
+					<tr th:each="jd : ${jdlist}">
+						<td><input type="checkbox" id="${jd.judgeName}"
+							name="${jd.judgeUserId}"></td>
+						<td th:text="${jd.judgeName}"></td>
+					</tr>
+				</table>
+				<div class="row">
+					<input type="submit" value="Submit">
+				</div>
 		</form>
 	</div>
-
+	<script>  
+function fun() {  
+	let jdlists = document.getElementById("judge").getAttribute("jdlist");
+	console.log(jdlists);
+}  
+</script>
 </body>
 
 </html>
