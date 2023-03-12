@@ -3,9 +3,11 @@ package com.security.contests.domain;
 public class JudgeDisplay {
 
 	
-	private String  judgeName;
+	public boolean judgeSno =false;
+   
+	public String  judgeName;
 	
-	private Long judgeUserId;
+	public Long judgeUserId;
 
 	/**
 	 * @return the judgeName
@@ -33,6 +35,20 @@ public class JudgeDisplay {
 	 */
 	public final void setJudgeUserId(Long judgeUserId) {
 		this.judgeUserId = judgeUserId;
+	}
+
+	/**
+	 * @return the judgeSno
+	 */
+	public final boolean isJudgeSno() {
+		return judgeSno;
+	}
+
+	/**
+	 * @param judgeSno the judgeSno to set
+	 */
+	public final void setJudgeSno(boolean judgeSno) {
+		this.judgeSno = judgeSno;
 	}
 	
 	

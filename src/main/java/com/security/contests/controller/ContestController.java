@@ -1,15 +1,20 @@
 package com.security.contests.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.security.contests.config.MyDataBaseConfiguration;
+import com.security.contests.domain.CreateConstestModel;
 import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.User;
 import com.security.contests.repository.CustomDAO;
@@ -46,13 +51,36 @@ public class ContestController {
 	}
 
 	@GetMapping("/createContest")
-	public String createContest(HttpServletRequest request, Model model) {
-		List<JudgeDisplay> jdlist = customDAO.listJudges();
+	public String createGetContest(HttpServletRequest request, Model model) {
+		 ArrayList<JudgeDisplay> jdlist = customDAO.listJudges();
+		
+		CreateConstestModel ccm = new CreateConstestModel();
 		if(jdlist !=null && !jdlist.isEmpty()) {
-			model.addAttribute("jdlist", jdlist);
+			ccm.setJdlist(jdlist);
 		}
+		ccm.setEndDate(new Date());
+		ccm.setStartDate(new Date());
+		model.addAttribute("ccm", ccm);
 		return "createContest";
 	}
+	
+	@PostMapping("/PostcreateContest")
+	public String createContest(@ModelAttribute("ccm") CreateConstestModel ccm, Model model) {
+		if(!ccm.getJdlist().isEmpty()) {
+			long jds = ccm.getJdlist().stream().filter(i-> i.isJudgeSno()).count();
+			if(jds >5 &&jds <10) {
+				model.addAttribute("noofjds", true);
+			}
+		}
+		else {
+			List<JudgeDisplay> selectedJudgesList = ccm.getJdlist().stream().filter(i-> i.isJudgeSno()).toList();
+			
+		}
+	
+	System.out.println(ccm);
+		return "createContest";
+	}
+
 
 	@PostMapping(value = "/refreshData")
 	public String referData(HttpServletRequest request, Model model) throws Exception {

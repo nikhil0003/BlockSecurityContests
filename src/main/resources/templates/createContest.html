@@ -112,14 +112,15 @@ input[type=submit]:hover {
 
 	<h2>Create Contest</h2>
 	<div class="container">
-		<form th:action="@{/createContest}" method="post">
+		<form th:action="@{/PostcreateContest}" method="post"
+			th:object="${ccm}">
 			<div class="row">
 				<div class="col-25">
 					<label for="fname">Contest name</label>
 				</div>
 				<div class="col-75">
-					<input type="text" id="fname" name="firstname"
-						placeholder="Contest name..">
+					<input type="text" id="firstname" name="firstname"
+						th:field="*{firstname}" placeholder="Contest name..">
 				</div>
 			</div>
 			<div class="row">
@@ -128,7 +129,8 @@ input[type=submit]:hover {
 						<label for="startDate">Start Date</label>
 					</div>
 					<div class="col-75">
-						<input type="date" id="startDate" name="startDate">
+						<input type="date" id="startDate" name="startDate"
+							th:field="*{startDate}">
 					</div>
 				</div>
 				<div class="row">
@@ -136,34 +138,33 @@ input[type=submit]:hover {
 						<label for="endDate">End Date</label>
 					</div>
 					<div class="col-75">
-						<input type="date" id="endDate" name="endDate">
+						<input type="date" id="endDate" name="endDate"
+							th:field="*{endDate}">
 					</div>
 				</div>
 			</div>
 			<br>
-				<table th:if="${ not#lists.isEmpty(jdlist)}" id="judge"  th:attr="data-jsdlist=${jdlist}">
-					<tr>
-						<th><input type="checkbox" id="selectAll" onclick = "fun()"></th>
-						<th>Judge Address</th>
-					</tr>
-
-					<tr th:each="jd : ${jdlist}">
-						<td><input type="checkbox" id="${jd.judgeName}"
-							name="${jd.judgeUserId}"></td>
-						<td th:text="${jd.judgeName}"></td>
-					</tr>
-				</table>
-				<div class="row">
-					<input type="submit" value="Submit">
-				</div>
+			<table th:if="${ not#lists.isEmpty(ccm.jdlist)}" id="judge">
+				<tr>
+					<th>Choose Judge</th>
+					<th>Judge Address</th>
+				</tr>
+				<tr th:each="jd, itemStat : *{jdlist}">
+					<td style="display: none;"><input type="hidden"
+						th:value="*{jdlist[__${itemStat.index}__].judgeUserId}"
+						th:field="*{jdlist[__${itemStat.index}__].judgeUserId}" /></td>
+					<td><input type="checkbox"
+						th:checked="*{jdlist[__${itemStat.index}__].judgeSno}"
+						th:field="*{jdlist[__${itemStat.index}__].judgeSno}" /></td>
+					<td th:field="*{jdlist[__${itemStat.index}__].judgeName}"
+						th:text="*{jdlist[__${itemStat.index}__].judgeName}"></td>
+				</tr>
+			</table>
+			<div class="row">
+				<input type="submit" value="Submit">
+			</div>
 		</form>
 	</div>
-	<script>  
-function fun() {  
-	let jdlists = document.getElementById("judge").getAttribute("jdlist");
-	console.log(jdlists);
-}  
-</script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 package com.security.contests.repository;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
@@ -21,6 +21,6 @@ public interface CustomDAO {
 	
 	Role findByRoleId(Long roleId);
 	
-	List<JudgeDisplay> listJudges();
+	ArrayList<JudgeDisplay> listJudges();
 	
 }

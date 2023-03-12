@@ -50,7 +50,9 @@ public class DefaultSecurityConfig {
 			"/forgetPassword",
 			"/newUser",
 			"/badRequest",
-			"/newUser/**"
+			"/newUser/**",
+			"/createContest",
+			"/PostcreateContest"
 	};
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {

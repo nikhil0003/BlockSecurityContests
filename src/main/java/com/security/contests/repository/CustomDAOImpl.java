@@ -84,7 +84,7 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 	
 	@Override
-	public List<JudgeDisplay> listJudges() {
+	public ArrayList<JudgeDisplay> listJudges() {
 		final String checkSql = "select count(*) from user u , user_role ur , role r where u.id = ur.user_id and "
 				+ "ur.role_id = r.role_id and r.name = 'judge'";
 		Query checkquery = em.createNativeQuery(checkSql);
@@ -94,7 +94,7 @@ public class CustomDAOImpl implements CustomDAO {
 					+ "ur.role_id = r.role_id and r.name = 'judge'";
 			Query query = em.createNativeQuery(sql);
 			List<Object> objList =  query.getResultList();
-			List<JudgeDisplay> list = new ArrayList<JudgeDisplay>();
+			ArrayList<JudgeDisplay> list = new ArrayList<JudgeDisplay>();
 			for(Object iter :  objList ) {
 				Object[] ob = (Object[])iter;
 				JudgeDisplay jd = new JudgeDisplay();
