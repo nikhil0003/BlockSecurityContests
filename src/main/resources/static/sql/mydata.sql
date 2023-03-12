@@ -43,7 +43,9 @@ CREATE TABLE `contest` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `contestant` (
-  `id` bigint NOT NULL  AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `data_area` varchar(255) DEFAULT NULL,
+  `grade` bigint DEFAULT NULL,
   `contest_id` bigint DEFAULT NULL,
   `user_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -52,6 +54,7 @@ CREATE TABLE `contestant` (
   CONSTRAINT `FKeg4du20g71lh58sco0b8hu9a8` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FKkxe255ggrm2s4gubvextgon86` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `judge` (
   `id` bigint NOT NULL  AUTO_INCREMENT,

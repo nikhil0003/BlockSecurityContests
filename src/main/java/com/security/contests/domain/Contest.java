@@ -1,6 +1,6 @@
 package com.security.contests.domain;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -33,8 +33,8 @@ public class Contest {
 	private List<Judge> JudgeList;
 
 	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "contest")
-	private Contestant contestant;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contest")
+	private List<Contestant> contestant;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "contest")
 	private Sponser sponser;
@@ -118,10 +118,11 @@ public class Contest {
 	}
 
 
+	
 	/**
 	 * @return the contestant
 	 */
-	public Contestant getContestant() {
+	public List<Contestant> getContestant() {
 		return contestant;
 	}
 
@@ -129,7 +130,7 @@ public class Contest {
 	/**
 	 * @param contestant the contestant to set
 	 */
-	public void setContestant(Contestant contestant) {
+	public void setContestant(List<Contestant> contestant) {
 		this.contestant = contestant;
 	}
 

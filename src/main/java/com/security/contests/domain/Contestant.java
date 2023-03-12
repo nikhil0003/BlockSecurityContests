@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -18,13 +19,19 @@ public class Contestant {
 	@Column(name="Id", nullable = false, updatable = false)
 	private Long Id;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="contestId")
 	private Contest contest;
 
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private User user;
+	
+	@Column(name="dataArea")
+	private String dataArea;
+	
+	@Column(name="grade")
+	private Long grade;
 
 
 	/**
@@ -72,6 +79,38 @@ public class Contestant {
 	 */
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+
+	/**
+	 * @return the dataArea
+	 */
+	public String getDataArea() {
+		return dataArea;
+	}
+
+
+	/**
+	 * @param dataArea the dataArea to set
+	 */
+	public void setDataArea(String dataArea) {
+		this.dataArea = dataArea;
+	}
+
+
+	/**
+	 * @return the grade
+	 */
+	public Long getGrade() {
+		return grade;
+	}
+
+
+	/**
+	 * @param grade the grade to set
+	 */
+	public void setGrade(Long grade) {
+		this.grade = grade;
 	}
 	
 	
