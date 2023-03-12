@@ -17,7 +17,9 @@ public interface CustomDAO {
 	int saveRoleData(String name);
 
 	int saveUserRoleData(Long userId,Long roleId);
-	
+
+	int updateContestantGrade(Long contestantId, Long grade);
+
 	Role findByname(String name);
 	
 	

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.security.contests.domain.Contest;
+import com.security.contests.domain.Contestant;
+import com.security.contests.domain.CreateConstestModel;
+import com.security.contests.domain.JudgeDisplay;
+import com.security.contests.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,10 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.security.contests.config.MyDataBaseConfiguration;
-import com.security.contests.domain.Contest;
-import com.security.contests.domain.CreateConstestModel;
-import com.security.contests.domain.JudgeDisplay;
-import com.security.contests.domain.User;
 import com.security.contests.repository.CustomDAO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -110,4 +111,17 @@ public class ContestController {
 
 		return "home";
 	}
+
+	@PostMapping(value ="/getGradeSubmissionForm")
+	public String getGradeSubmissionForm(@ModelAttribute("contestant") Contestant contestant, HttpServletRequest request, Model model) {
+		model.addAttribute("contestant", contestant);
+		return "gradeSubmissionForm";
+	}
+
+	@PostMapping(value ="/gradeSubmission")
+	public String gradeSubmission(@ModelAttribute("contestant") Contestant contestant, HttpServletRequest request, Model model) {
+		customDAO.updateContestantGrade(contestant.getId(), contestant.getGrade());
+		return "contestList"; //TODO: Replace with contestantList to grade another contestant
+	}
+
 }

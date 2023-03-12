@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.security.contests.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
-
-import com.security.contests.domain.Contest;
-import com.security.contests.domain.CreateConstestModel;
-import com.security.contests.domain.JudgeDisplay;
-import com.security.contests.domain.Role;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -47,6 +43,15 @@ public class CustomDAOImpl implements CustomDAO {
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(2, userId);
 		query.setParameter(1, roleId);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int updateContestantGrade(Long contestantId, Long grade) {
+		final String sql = "UPDATE contestant SET grade = ? WHERE id = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, grade);
+		query.setParameter(2, contestantId);
 		return query.executeUpdate();
 	}
 
