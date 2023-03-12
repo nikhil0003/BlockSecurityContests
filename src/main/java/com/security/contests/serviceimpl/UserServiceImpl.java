@@ -1,7 +1,6 @@
 package com.security.contests.serviceimpl;
 
-import java.util.Set;
-
+import com.security.contests.domain.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
+	private static final Long DEFAULT_INITIAL_BALANCE = 0L;
+	private static final Long SPONSER_INITIAL_BALANCE = 1000000L;
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
 		int userSuccess = 0;
 		int roleSuccess = 0;
 		int userRoleSuccess = 0;
+		int walletSuccess = 0;
 
 		if (localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
@@ -57,6 +60,14 @@ public class UserServiceImpl implements UserService {
 				} else {
 					userRoleSuccess = customDao.saveUserRoleData(localUser.getId(), roledb.getRoleId());
 					localUser.setUserRoles(userRoles);
+				}
+				final Long initialBalance = roledb.getName().equals("sponser")
+						? SPONSER_INITIAL_BALANCE
+						: DEFAULT_INITIAL_BALANCE;
+				walletSuccess = customDao.saveWalletData(localUser.getId(), initialBalance);
+				if (walletSuccess != 0) {
+					Wallet wallet = customDao.findWalletByUserId(localUser.getId());
+					customDao.saveLedgerData(wallet.getId(), initialBalance, "Initial balance");
 				}
 			}
 
