@@ -119,15 +119,13 @@ input[type=submit]:hover {
 				<th>End Date</th>
 			</tr>
 			<tr th:each="contest : ${contestList}">
+				<a th:href="@{'/contest' + ${contest.id}}">
 				<td th:text="${contest.name}"></td>
 				<td th:text="${contest.startDate}"></td>
 				<td th:text="${contest.endDate}"></td>
-
+				</a>
 			</tr>
 		</table>
-		<div class="row">
-			<input type="submit" value="Submit">
-		</div>
 	</div>
 </body>
 
