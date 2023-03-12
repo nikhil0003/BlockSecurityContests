@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.security.contests.config.MyDataBaseConfiguration;
@@ -101,6 +102,19 @@ public class ContestController {
 		ArrayList<Contest> contestList = customDAO.listContests();
 		model.addAttribute("contestList", contestList);
 		return "contestList";
+	}
+	
+	@GetMapping("/contest/{id}")
+	public String getContestPage(Model model,@PathVariable Long id) {
+		Contest c = customDAO.findByContestId(id);
+		CreateConstestModel contest = new CreateConstestModel();
+		if(c !=null) {
+			contest.setStartDate(c.getStartDate());
+			contest.setFirstname(c.getName());
+			contest.setEndDate(c.getEndDate());
+		}
+		model.addAttribute("contest", contest);
+		return "contestpage";
 	}
 
 	@PostMapping(value = "/refreshData")

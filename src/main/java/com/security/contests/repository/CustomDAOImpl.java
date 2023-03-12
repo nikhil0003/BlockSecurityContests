@@ -182,4 +182,30 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	}
+	
+	
+	@Override
+	public Contest findByContestId(Long Id) {
+		final String checkSql = "select count(*) from contest where id = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, Id);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from Contest where id = (?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, Id);
+			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+			Contest jd = new Contest();
+			if (ob != null) {
+				jd.setId((Long)ob[0]);
+				jd.setName((String) ob[2]);
+				jd.setEndDate((Date)ob[1]);
+				jd.setStartDate((Date)ob[3]);
+				return jd;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	} 
 }

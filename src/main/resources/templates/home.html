@@ -130,7 +130,8 @@ body {
 	text-align: center;
 	width: 100%;
 }
-button[type=""] {
+
+button[type="submit"] {
 	background-color: #08d;
 	border-radius: 12px;
 	border: 0;
@@ -177,6 +178,7 @@ a:hover {
 	color: red;
 	margin: 10px;
 }
+
 .successful {
 	color: #008000;
 	margin: 10px;
@@ -186,17 +188,21 @@ a:hover {
 
 <body>
 	<div class="form">
-	<div class="successful"th:if="${refresh}"> DataBase Initialized   
-			</div>
+		<div class="successful" th:if="${refresh}">DataBase Initialized
+		</div>
 		<form th:action="@{/refreshData}" method="post">
 			<div class="title">Home</div>
-			<div class="subtitle">Welcome 
-			<span th:if="${isAdmin}"  >Root </span> User</div>
-			<button th:if="${isAdmin}"  type="submit" class="submit">Initialize DataBase</button>
+			<div class="subtitle">
+				Welcome <span th:if="${isAdmin}">Root </span> User
+			</div>
+			<button th:if="${isAdmin}" type="submit" class="submit">Initialize
+				DataBase</button>
 		</form>
-		<a  th:if="${isSponser}" th:href="@{/createContest}"> 
-         <button type="button">Sponser</button> 
-         </a>
+		<a th:if="${isSponser}" th:href="@{/createContest}">
+			<button type="button">createContest</button>
+		</a> <a th:href="@{/contestList}">
+			<button type="button">Contests</button>
+		</a>
 		<form th:action="@{/logout}" method="post">
 			<button type="submit" class="submit">Logout</button>
 		</form>

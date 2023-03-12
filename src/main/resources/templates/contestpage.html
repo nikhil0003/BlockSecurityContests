@@ -110,25 +110,40 @@ input[type=submit]:hover {
 </head>
 <body>
 
-	<h2>Create Contest</h2>
+	<h2> Contest</h2>
 	<div class="container">
-		<table th:if="${ not#lists.isEmpty(contestList)}" id="judge">
-			<tr>
-				<th>Name</th>
-				<th>Start Date</th>
-				<th>End Date</th>
-			</tr>
-			<tr th:each="contest : ${contestList}">
-				<td th:text="${contest.name}"
-					th:onclick="|window.location.href='/contest/${contest.id}'|"></td>
-				<td th:text="${contest.startDate}"
-					th:onclick="|window.location.href='/contest/${contest.id}'|">
-				</td>
-				<td th:text="${contest.endDate}"
-					th:onclick="|window.location.href='/contest/${contest.id}'|"></td>
-
-			</tr>
-		</table>
+		<form
+			th:object="${contest}">
+			<div class="row">
+				<div class="col-25">
+					<label for="fname">Contest name</label>
+				</div>
+				<div class="col-75">
+					<input type="text" id="firstname" name="firstname"
+						th:field="*{firstname}" placeholder="Contest name.." readonly>
+				</div>
+			</div>
+			<div class="row">
+				<div class="row">
+					<div class="col-25">
+						<label for="startDate">Start Date</label>
+					</div>
+					<div class="col-75">
+						<input type="date" id="startDate" name="startDate"
+							readonly th:field="*{startDate}">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label for="endDate">End Date</label>
+					</div>
+					<div class="col-75">
+						<input type="date" id="endDate" name="endDate"
+							th:field="*{endDate}" readonly>
+					</div>
+				</div>
+			</div>			
+		</form>
 	</div>
 </body>
 
