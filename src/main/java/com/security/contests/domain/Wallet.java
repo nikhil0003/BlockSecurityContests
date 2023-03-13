@@ -2,14 +2,7 @@ package com.security.contests.domain;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Wallet {
@@ -19,15 +12,13 @@ public class Wallet {
 	@Column(name = "Id", nullable = false, updatable = false)
 	private Long Id;
 
-	@Column(name = "address",unique = true)
-	private String address;
-
 	private Long balance;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="user_id")
 	private User user;
 	
-	@OneToMany(mappedBy = "wallet",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "wallet")
 	private List<Ledger> ledger;
 
 	/**
@@ -42,20 +33,6 @@ public class Wallet {
 	 */
 	public void setId(Long id) {
 		Id = id;
-	}
-
-	/**
-	 * @return the address
-	 */
-	public String getAddress() {
-		return address;
-	}
-
-	/**
-	 * @param address the address to set
-	 */
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	/**

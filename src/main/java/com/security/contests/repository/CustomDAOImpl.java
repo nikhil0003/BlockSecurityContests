@@ -47,6 +47,34 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	@Override
+	public int saveWalletData(Long userId, Long balance) {
+		final String sql = "INSERT INTO wallet(balance,user_id) values(?,?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(2, userId);
+		query.setParameter(1, balance);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int updateWalletData(Long userId, Long balance) {
+		final String sql = "UPDATE wallet SET balance = ? WHERE user_id = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(2, userId);
+		query.setParameter(1, balance);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int saveLedgerData(Long walletId, Long amount, String description) {
+		final String sql = "INSERT INTO ledger(walletId, amount, description) values(?,?, ?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, walletId);
+		query.setParameter(2, amount);
+		query.setParameter(3, description);
+		return query.executeUpdate();
+	}
+
+	@Override
 	public int updateContestantGrade(Long contestantId, Long grade) {
 		final String sql = "UPDATE contestant SET grade = ? WHERE id = ?";
 		Query query = em.createNativeQuery(sql);
@@ -89,6 +117,19 @@ public class CustomDAOImpl implements CustomDAO {
 		role.setName((String) ob[1]);
 		return role;
 
+	}
+
+	@Override
+	public Wallet findWalletByUserId(Long userId) {
+		final String sql = "select * from wallet where user_id =(?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, userId);
+		Object[] ob = (Object[]) query.getSingleResult();
+		Wallet wallet = new Wallet();
+		wallet.setId((Long) ob[0]);
+		//wallet.setAddress((String)ob[1]);
+		wallet.setBalance((Long) ob[2]);
+		return wallet;
 	}
 
 	@Override

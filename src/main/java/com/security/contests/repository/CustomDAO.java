@@ -2,36 +2,41 @@ package com.security.contests.repository;
 
 import java.util.ArrayList;
 
+import com.security.contests.domain.*;
 import org.springframework.stereotype.Component;
-
-import com.security.contests.domain.Contest;
-import com.security.contests.domain.CreateConstestModel;
-import com.security.contests.domain.JudgeDisplay;
-import com.security.contests.domain.Role;
 
 @Component
 public interface CustomDAO {
-
+	
 	int saveUserData(String username, String password);
-
+	
 	int saveRoleData(String name);
 
-	int saveUserRoleData(Long userId, Long roleId);
+	int saveUserRoleData(Long userId,Long roleId);
+
+	int saveWalletData(Long userId, Long balance);
+
+	int updateWalletData(Long userId, Long balance);
+
+	int saveLedgerData(Long walletId, Long amount, String description);
 
 	int updateContestantGrade(Long contestantId, Long grade);
 
 	Role findByname(String name);
-
+	
+	
 	Role findByRoleId(Long roleId);
 
+	Wallet findWalletByUserId(Long userId);
+
 	ArrayList<JudgeDisplay> listJudges();
-
+	
 	int saveContestData(CreateConstestModel ccm);
-
+	
 	Contest findByContest(String name);
-
-	int saveContestJudge(Contest contestName, CreateConstestModel ccm);
-
+	
+	int saveContestJudge(Contest contestName,CreateConstestModel ccm);
+	
 	ArrayList<Contest> listContests();
 
 	Contest findByContestId(Long Id);

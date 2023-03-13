@@ -24,7 +24,7 @@ public class Ledger {
 	private Long amount;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="address_id")
+	@JoinColumn(name="walletId")
 	private Wallet wallet;
 
 	/**
