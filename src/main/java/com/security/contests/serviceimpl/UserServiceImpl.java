@@ -26,14 +26,11 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private RoleRepository roleRepository;
-
-	@Autowired
 	private CustomDAO customDao;
 
 	@Override
 	public User createUser(User user, UserRole userRoles) {
-		User localUser = userRepository.findByUsername(user.getUsername());
+		User localUser = customDao.findByUseName(user.getUsername());
 		int userSuccess = 0;
 		int roleSuccess = 0;
 		int userRoleSuccess = 0;
@@ -42,11 +39,12 @@ public class UserServiceImpl implements UserService {
 		if (localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
 			Role roledb = customDao.findByname(user.getUserRoles().getRole().getName());
-			localUser.getUserRoles().setRole(roledb);
-			
+			UserRole ur = new UserRole();
+			ur.setRole(roledb);
+			localUser.setUserRoles(ur);
 		} else {
 			userSuccess = customDao.saveUserData(user.getUsername(), user.getPassword());
-			localUser = userRepository.findByUsername(user.getUsername());
+			localUser = customDao.findByUseName(user.getUsername());
 			if (userSuccess != 0) {
 				Role roledb = customDao.findByname(user.getUserRoles().getRole().getName());
 				if (roledb == null) {
@@ -61,14 +59,14 @@ public class UserServiceImpl implements UserService {
 					userRoleSuccess = customDao.saveUserRoleData(localUser.getId(), roledb.getRoleId());
 					localUser.setUserRoles(userRoles);
 				}
-				final Long initialBalance = roledb.getName().equals("sponser")
-						? SPONSER_INITIAL_BALANCE
-						: DEFAULT_INITIAL_BALANCE;
-				walletSuccess = customDao.saveWalletData(localUser.getId(), initialBalance);
-				if (walletSuccess != 0) {
-					Wallet wallet = customDao.findWalletByUserId(localUser.getId());
-					customDao.saveLedgerData(wallet.getId(), initialBalance, "Initial balance");
-				}
+//				final Long initialBalance = roledb.getName().equals("sponser")
+//						? SPONSER_INITIAL_BALANCE
+//						: DEFAULT_INITIAL_BALANCE;
+//				walletSuccess = customDao.saveWalletData(localUser.getId(), initialBalance);
+//				if (walletSuccess != 0) {
+//					Wallet wallet = customDao.findWalletByUserId(localUser.getId());
+//					customDao.saveLedgerData(wallet.getId(), initialBalance, "Initial balance");
+//				}
 			}
 
 		}
@@ -83,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findByUsername(String username) {
-		return userRepository.findByUsername(username);
+		return customDao.findByUseName(username);
 	}
 
 }

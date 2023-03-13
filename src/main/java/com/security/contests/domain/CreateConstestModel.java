@@ -13,6 +13,8 @@ public class CreateConstestModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4815692903514925536L;
+	
+	public Long id;
 
 	public String firstname;
 	
@@ -23,6 +25,22 @@ public class CreateConstestModel implements Serializable {
 	
     @DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date endDate;
+    
+    
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the firstname

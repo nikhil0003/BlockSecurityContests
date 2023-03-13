@@ -127,7 +127,7 @@ public class CustomDAOImpl implements CustomDAO {
 		Object[] ob = (Object[]) query.getSingleResult();
 		Wallet wallet = new Wallet();
 		wallet.setId((Long) ob[0]);
-		//wallet.setAddress((String)ob[1]);
+		// wallet.setAddress((String)ob[1]);
 		wallet.setBalance((Long) ob[2]);
 		return wallet;
 	}
@@ -164,7 +164,7 @@ public class CustomDAOImpl implements CustomDAO {
 		query.setParameter(3, ccm.getEndDate());
 		return query.executeUpdate();
 	}
-	
+
 	@Override
 	public Contest findByContest(String name) {
 		final String checkSql = "select count(*) from contest where name = (?)";
@@ -186,8 +186,8 @@ public class CustomDAOImpl implements CustomDAO {
 			}
 		}
 		return null;
-	} 
-	
+	}
+
 	public int saveContestJudge(Contest contestName, CreateConstestModel ccm) {
 		int count = 0;
 		List<JudgeDisplay> selectedJudgesList = ccm.getJdlist().stream().filter(i -> i.isJudgeSno()).toList();
@@ -200,8 +200,8 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return count;
 	}
-	
-	public ArrayList<Contest> listContests(){
+
+	public ArrayList<Contest> listContests() {
 		final String checkSql = "select count(*) from contest";
 		Query checkquery = em.createNativeQuery(checkSql);
 		Long present = (Long) checkquery.getSingleResult();
@@ -213,18 +213,17 @@ public class CustomDAOImpl implements CustomDAO {
 			for (Object iter : objList) {
 				Object[] ob = (Object[]) iter;
 				Contest jd = new Contest();
-				jd.setId((Long)ob[0]);
+				jd.setId((Long) ob[0]);
 				jd.setName((String) ob[2]);
-				jd.setEndDate((Date)ob[1]);
-				jd.setStartDate((Date)ob[3]);
+				jd.setEndDate((Date) ob[1]);
+				jd.setStartDate((Date) ob[3]);
 				list.add(jd);
 			}
 			return list;
 		}
 		return null;
 	}
-	
-	
+
 	@Override
 	public Contest findByContestId(Long Id) {
 		final String checkSql = "select count(*) from contest where id = (?)";
@@ -238,15 +237,110 @@ public class CustomDAOImpl implements CustomDAO {
 			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
 			Contest jd = new Contest();
 			if (ob != null) {
-				jd.setId((Long)ob[0]);
+				jd.setId((Long) ob[0]);
 				jd.setName((String) ob[2]);
-				jd.setEndDate((Date)ob[1]);
-				jd.setStartDate((Date)ob[3]);
+				jd.setEndDate((Date) ob[1]);
+				jd.setStartDate((Date) ob[3]);
 				return jd;
 			} else {
 				return null;
 			}
 		}
 		return null;
-	} 
+	}
+
+	public ArrayList<Contestant> listContestantForContest(Contest contest) {
+		final String checkSql = "select count(*) from contestant where contest_id = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, contest.getId());
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0) {
+			final String sql = "select * from contestant where contest_id = (?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, contest.getId());
+			List<Object> objList = query.getResultList();
+			ArrayList<Contestant> list = new ArrayList<Contestant>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				Contestant jd = new Contestant();
+				jd.setId((Long) ob[0]);
+				jd.setDataArea((String) ob[1]);
+				jd.setGrade((Long) ob[2]);
+				User user = new User();
+				user.setId((Long) ob[4]);
+				jd.setContest(contest);
+				jd.setUser(user);
+				list.add(jd);
+			}
+			return list;
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public int joinContestant(Long contestId, Long userId) {
+		final String sql = "INSERT INTO contestant(contest_id,user_id) values(?,?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, contestId);
+		query.setParameter(2, userId);
+		return query.executeUpdate();
+	}
+
+	public int joinSubmission(Long id, String data) {
+		final String sql = "UPDATE contestant SET data_area = (?) WHERE id =(?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, data);
+		query.setParameter(2, id);
+		return query.executeUpdate();
+	}
+
+	
+	public 	User findByUseName(String name) {
+		final String checkSql = "select count(*) from user where username = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, name);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from user where username = (?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, name);
+			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+			User user = new User();
+			if (ob != null) {
+				user.setId((Long)ob[0]);
+				user.setUsername(name);
+				user.setPassword((String)ob[3]);
+				return user;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+	
+	public UserRole findByUserIdUserRole(User use) {
+		final String checkSql = "select count(*) from user_role where user_id = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, use.getId());
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from user_role where user_id = (?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, use.getId().intValue());
+			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+			UserRole user = new UserRole();
+			if (ob != null) {
+				user.setUserRoleId((Long) ob[0]);
+				user.setUser(use);
+				Role role = new Role();
+				role.setRoleId((Long) ob[1]);
+				user.setRole(role);
+				return user;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+
 }

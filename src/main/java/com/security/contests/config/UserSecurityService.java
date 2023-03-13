@@ -9,30 +9,22 @@ import org.springframework.stereotype.Service;
 import com.security.contests.domain.User;
 import com.security.contests.domain.UserRole;
 import com.security.contests.repository.CustomDAO;
-import com.security.contests.repository.RoleRepository;
-import com.security.contests.repository.UserRepository;
-import com.security.contests.repository.UserRoleRepositry;
 
 @Service
 public class UserSecurityService implements UserDetailsService {
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private UserRoleRepositry userRoleRepositry;
 	
 	@Autowired
 	private CustomDAO customDAO;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
+		User user = customDAO.findByUseName(username);
 		if (null == user) {
 			userNotFound();
 		} else if (user.getId() != null) {
-			UserRole userRole = userRoleRepositry.findByUserId(user.getId());
+			UserRole userRole = customDAO.findByUserIdUserRole(user);
 			if (null != userRole) {
+				user.setUserRoles(userRole);
 				if (userRole.getUserRoleId() != null) {
 					userRole.setRole(customDAO.findByRoleId(userRole.getRole().getRoleId()));
 				} else {

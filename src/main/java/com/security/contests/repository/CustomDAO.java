@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface CustomDAO {
-	
+
 	int saveUserData(String username, String password);
-	
+
 	int saveRoleData(String name);
 
-	int saveUserRoleData(Long userId,Long roleId);
+	int saveUserRoleData(Long userId, Long roleId);
 
 	int saveWalletData(Long userId, Long balance);
 
@@ -23,22 +23,31 @@ public interface CustomDAO {
 	int updateContestantGrade(Long contestantId, Long grade);
 
 	Role findByname(String name);
-	
-	
+
 	Role findByRoleId(Long roleId);
 
 	Wallet findWalletByUserId(Long userId);
 
 	ArrayList<JudgeDisplay> listJudges();
-	
+
 	int saveContestData(CreateConstestModel ccm);
-	
+
 	Contest findByContest(String name);
-	
-	int saveContestJudge(Contest contestName,CreateConstestModel ccm);
-	
+
+	int saveContestJudge(Contest contestName, CreateConstestModel ccm);
+
 	ArrayList<Contest> listContests();
 
 	Contest findByContestId(Long Id);
+
+	ArrayList<Contestant> listContestantForContest(Contest contest);
+	
+	int joinContestant(Long contestId,Long userId);
+	
+	UserRole findByUserIdUserRole(User use);
+	
+	User findByUseName(String name);
+	
+	int joinSubmission(Long id, String data);
 
 }

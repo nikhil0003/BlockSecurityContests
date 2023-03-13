@@ -8,8 +8,8 @@ import com.security.contests.domain.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 	
-	@Query(value ="select * from user where username = :username",nativeQuery = true)
-	User findByUsername(@Param("username") String username);
+//	@Query(value ="select * from user where username = :username",nativeQuery = true)
+//	User findByUsername(@Param("username") String username);
 	
 	
 //	@Query(value="INSERT INTO securitycontest.user(username,password,enabled)  values(\"hello1\" ,\"he;lo1\",true)",nativeQuery = true)

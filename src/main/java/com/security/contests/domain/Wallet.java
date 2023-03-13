@@ -21,6 +21,9 @@ public class Wallet {
 	@OneToMany(mappedBy = "wallet")
 	private List<Ledger> ledger;
 
+	
+	@Column(name = "address",unique = true)
+	private String address;
 	/**
 	 * @return the id
 	 */
@@ -75,6 +78,20 @@ public class Wallet {
 	 */
 	public void setLedger(List<Ledger> ledger) {
 		this.ledger = ledger;
+	}
+	
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	
