@@ -223,19 +223,6 @@ public class ContestController {
 		return "redirect:/contestList";
 	}
 
-	@PostMapping(value = "/getGradeSubmissionForm")
-	public String getGradeSubmissionForm(@ModelAttribute("contestant") Contestant contestant,
-			HttpServletRequest request, Model model) {
-		model.addAttribute("contestant", contestant);
-		return "gradeSubmissionForm";
-	}
-
-	@PostMapping(value = "/gradeSubmission")
-	public String gradeSubmission(@ModelAttribute("contestant") Contestant contestant, HttpServletRequest request,
-			Model model) {
-		customDAO.updateContestantGrade(contestant.getId(), contestant.getGrade());
-		return "contestList"; // TODO: Replace with contestantList to grade another contestant
-	}
 
 //	@GetMapping(value = "/distributeRewards")
 //	public String distributeRewards(@ModelAttribute("contest") Contest contest, HttpServletRequest request,
