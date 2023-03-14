@@ -144,22 +144,40 @@ input[type=submit]:hover {
 			</div>
 		</form>
 		<div class="row">
-			<form th:if="${joincontest}"
+			<form th:if="${haveTojoin}"
 				th:action="@{'/joinContest/' + ${contest.id}}" method="get"
 				th:object="${contest}">
 				<button type="submit" class="submit">Join Contest</button>
 			</form>
-			<div th:if="${!joincontest}">Joined in Contest</div>
+			<div th:if="${joinedConstanst}">Joined in Contest</div>
 		</div>
 
 		<div class="row">
-			<form th:if="${!joincontest}"
+			<form th:if="${joinedConstanst}"
 				th:action="@{'/submission/' + ${contestant.id}}" method="get"
 				th:object="${contestant}">
-				<textarea id="dataSub" name="dataSub" th:field="*{dataArea}" rows="4" cols="50"></textarea>
+				<textarea id="dataSub" name="dataSub" th:field="*{dataArea}"
+					rows="4" cols="50"></textarea>
 				<button type="submit" class="submit">Submit</button>
 			</form>
 		</div>
+		<div th:if="${isJudge}">Grade between 1 to 10</div>
+
+		<div class="row">
+			<table th:if="${ not#lists.isEmpty(participentsList)}" id="judge">
+				<tr>
+					<th>Contestant</th>
+					<th>ContestantData</th>
+				</tr>
+				<tr th:each="pl, itemStat : *{participentsList}">
+					<td th:field="*{participentsList[__${itemStat.index}__].contestantId}"
+						th:text="*{participentsList[__${itemStat.index}__].contestantId}"></td>
+					<td th:field="*{participentsList[__${itemStat.index}__].dataArea}"
+						th:text="*{participentsList[__${itemStat.index}__].dataArea}"></td>
+				</tr>
+			</table>
+		</div>
+
 	</div>
 </body>
 

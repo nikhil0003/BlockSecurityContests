@@ -342,5 +342,30 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	}
+	
+//	public ArrayList<Judge> findJudgesBycontestId(Long id){
+//		final String checkSql = "select count(*) from contest c , judge j where c.id = j.contest_id and contest_id = (?)";
+//		Query checkquery = em.createNativeQuery(checkSql);
+//		checkquery.setParameter(1, id);
+//		Long present = (Long) checkquery.getSingleResult();
+//		if (present > 0L) {
+//			final String sql = "select * from user_role where user_id = (?)";
+//			Query query = em.createNativeQuery(sql);
+//			query.setParameter(1, id);
+//			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+//			UserRole user = new UserRole();
+//			if (ob != null) {
+//				user.setUserRoleId((Long) ob[0]);
+//				user.setUser(use);
+//				Role role = new Role();
+//				role.setRoleId((Long) ob[1]);
+//				user.setRole(role);
+//				return user;
+//			} else {
+//				return null;
+//			}
+//		}
+//		return null;
+//	}
 
 }

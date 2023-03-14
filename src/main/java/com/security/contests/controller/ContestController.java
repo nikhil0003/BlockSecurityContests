@@ -18,6 +18,7 @@ import com.security.contests.domain.Contest;
 import com.security.contests.domain.Contestant;
 import com.security.contests.domain.CreateConstestModel;
 import com.security.contests.domain.JudgeDisplay;
+import com.security.contests.domain.JudgeGradeDispaly;
 import com.security.contests.domain.User;
 import com.security.contests.repository.CustomDAO;
 
@@ -116,45 +117,58 @@ public class ContestController {
 			contest.setId(contestData.getId());
 		}
 
-		boolean isjoinConstent = false;
-		boolean isShowdata = false;
+		boolean haveTojoin = false;
+		boolean joinedConstanst = false;
+		boolean isContestUser = false;
+		
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& user.getUserRoles().getRole().getName().equals("contestant")
 				&& contestData.getEndDate().compareTo(new Date()) > 0) {
-			isjoinConstent = true;
+			isContestUser = true;
 
 		}
 
-		ArrayList<Contestant> participentsList = customDAO.listContestantForContest(contestData);
-		if (!participentsList.isEmpty()
-				&& participentsList.stream().anyMatch(i -> i.getUser().getId().equals(user.getId()))) {
+		ArrayList<Contestant> participentsListDb = customDAO.listContestantForContest(contestData);
+		ArrayList<JudgeGradeDispaly> participentsList = new ArrayList<>();
+		if (!participentsListDb.isEmpty()
+				&& participentsListDb.stream().anyMatch(i -> i.getUser().getId().equals(user.getId()))) {
 			// already joined
-			isjoinConstent = false;
-			isShowdata = true;
+			if(isContestUser) {
+				joinedConstanst = true;
+			}
+			
+		}
+		else {
+			if(isContestUser)
+			 haveTojoin = true;
 		}
 
-		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
-				&& user.getUserRoles().getRole().getName() != null
-				&& (user.getUserRoles().getRole().getName().equals("contestant"))) {
-			// show only contest in future for judge
-			isShowdata = true;
-
-		} else {
-			isShowdata = false;
-		}
-
-		if (!participentsList.isEmpty() && isShowdata) {
-			Contestant contestant = participentsList.stream().filter(i -> i.getUser().getId().equals(user.getId()))
+		if (!participentsListDb.isEmpty() && isContestUser ) {
+			Contestant contestant = participentsListDb.stream().filter(i -> i.getUser().getId().equals(user.getId()))
 					.findFirst().get();
 			model.addAttribute("contestant", contestant);
 		}
+		
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& (user.getUserRoles().getRole().getName().equals("judge"))) {
 			model.addAttribute("isJudge", true);
+			
 		}
-		model.addAttribute("joincontest", isjoinConstent);
+		if(!participentsListDb.isEmpty()) {
+			participentsListDb.forEach(i->{
+				JudgeGradeDispaly jgd = new JudgeGradeDispaly();
+				jgd.setDataArea(i.getDataArea());
+				jgd.setContestantId(i.getId());
+				jgd.setJudgeId(user.getId());
+				participentsList.add(jgd);
+			});
+			model.addAttribute("participentsList", participentsList);
+			
+		}
+		model.addAttribute("haveTojoin", haveTojoin);
+		model.addAttribute("joinedConstanst", joinedConstanst);
 		model.addAttribute("contest", contest);
 		return "contestpage";
 
@@ -187,6 +201,14 @@ public class ContestController {
 		return "redirect:/contestList";
 
 	}
+	
+	@GetMapping("/SubmitGrade")
+	public String SubmitGrade() {
+		
+		return "redirect:/contestList";
+	}
+	
+	
 
 	@PostMapping(value = "/getGradeSubmissionForm")
 	public String getGradeSubmissionForm(@ModelAttribute("contestant") Contestant contestant,
