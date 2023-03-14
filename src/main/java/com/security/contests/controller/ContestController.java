@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.security.contests.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,8 @@ public class ContestController {
 				&& user.getUserRoles().getRole().getName().equals("sponser")) {
 			model.addAttribute("isSponser", true);
 		}
+		Wallet wallet = customDAO.findWalletByUserId(user.getId());
+		model.addAttribute("walletBalance", wallet.getBalance());
 		return "home";
 	}
 

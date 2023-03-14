@@ -66,7 +66,7 @@ public class CustomDAOImpl implements CustomDAO {
 
 	@Override
 	public int saveLedgerData(Long walletId, Long amount, String description) {
-		final String sql = "INSERT INTO ledger(walletId, amount, description) values(?,?, ?)";
+		final String sql = "INSERT INTO ledger(address_id, amount, description) values(?,?, ?)";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, walletId);
 		query.setParameter(2, amount);

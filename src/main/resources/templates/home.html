@@ -203,6 +203,7 @@ a:hover {
 		</a> <a th:href="@{/contestList}">
 			<button type="button">Contests</button>
 		</a>
+		<p style="background-color:powderblue;" th:text="${walletBalance}" />
 		<form th:action="@{/logout}" method="post">
 			<button type="submit" class="submit">Logout</button>
 		</form>

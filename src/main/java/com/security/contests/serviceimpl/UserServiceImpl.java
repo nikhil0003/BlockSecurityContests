@@ -59,14 +59,14 @@ public class UserServiceImpl implements UserService {
 					userRoleSuccess = customDao.saveUserRoleData(localUser.getId(), roledb.getRoleId());
 					localUser.setUserRoles(userRoles);
 				}
-//				final Long initialBalance = roledb.getName().equals("sponser")
-//						? SPONSER_INITIAL_BALANCE
-//						: DEFAULT_INITIAL_BALANCE;
-//				walletSuccess = customDao.saveWalletData(localUser.getId(), initialBalance);
-//				if (walletSuccess != 0) {
-//					Wallet wallet = customDao.findWalletByUserId(localUser.getId());
-//					customDao.saveLedgerData(wallet.getId(), initialBalance, "Initial balance");
-//				}
+				final Long initialBalance = roledb.getName().equals("sponser")
+						? SPONSER_INITIAL_BALANCE
+						: DEFAULT_INITIAL_BALANCE;
+				walletSuccess = customDao.saveWalletData(localUser.getId(), initialBalance);
+				if (walletSuccess != 0) {
+					Wallet wallet = customDao.findWalletByUserId(localUser.getId());
+					customDao.saveLedgerData(wallet.getId(), initialBalance, "Initial balance");
+				}
 			}
 
 		}
