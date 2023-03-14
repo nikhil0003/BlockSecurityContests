@@ -200,18 +200,26 @@ public class ContestController {
 	}
 
 	@GetMapping("/submission/{id}")
-	public String SubmissionContestantData(@ModelAttribute("contestant") Contestant contestant, @PathVariable Long id,
-			@ModelAttribute("contest") CreateConstestModel contest) {
-		if (id != null) {
-			customDAO.joinSubmission(id, contestant.getDataArea());
-		}
-		return "redirect:/contestList";
+	public String SubmissionContestantData(@PathVariable("id") Long contestantId,
+			@AuthenticationPrincipal User user, Model model) {
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& (user.getUserRoles().getRole().getName().equals("judge")) && contestantId != null) {
+			Contestant contestant = customDAO.findByContestantId(contestantId);
+			JudgeGradeDispaly jgd = new JudgeGradeDispaly();
+			jgd.setContestantId(contestant.getId());
+			jgd.setDataArea(contestant.getDataArea());
+			jgd.setJudgeId(user.getId());
+			model.addAttribute("jdg", jgd);
+			return "gradeSubmission";
+
+		} else
+			return "redirect:/contestList";
 
 	}
 
-	@GetMapping("/SubmitGrade")
+	@GetMapping("/submitGrade")
 	public String SubmitGrade() {
-
 		return "redirect:/contestList";
 	}
 

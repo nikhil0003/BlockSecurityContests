@@ -49,5 +49,7 @@ public interface CustomDAO {
 	User findByUseName(String name);
 	
 	int joinSubmission(Long id, String data);
+	
+    Contestant findByContestantId(Long id);
 
 }

@@ -171,9 +171,11 @@ input[type=submit]:hover {
 				</tr>
 				<tr th:each="pl, itemStat : *{participentsList}">
 					<td th:field="*{participentsList[__${itemStat.index}__].contestantId}"
-						th:text="*{participentsList[__${itemStat.index}__].contestantId}"></td>
+						th:text="*{participentsList[__${itemStat.index}__].contestantId}"
+						th:onclick="|window.location.href='/submission/${participentsList[__${itemStat.index}__].contestantId}'|"></td>
 					<td th:field="*{participentsList[__${itemStat.index}__].dataArea}"
-						th:text="*{participentsList[__${itemStat.index}__].dataArea}"></td>
+						th:text="*{participentsList[__${itemStat.index}__].dataArea}"
+						th:onclick="|window.location.href='/submission/${participentsList[__${itemStat.index}__].contestantId}'|"></td>
 				</tr>
 			</table>
 		</div>

@@ -111,43 +111,37 @@ input[type=submit]:hover {
 <body>
 
 	<h2>Grade Submission of Contestant</h2>
+	<p>Please grade </p>
 	<div class="container">
-		<form th:action="@{/gradeSubmission}" method="post"
-			th:object="${contestant}">
+		<form  th:object="${jgd}" >
 			<div class="row">
 				<div class="col-25">
-					<label for="Id">Contestant Id</label>
+					<label for="fname">Contestant Id</label>
 				</div>
 				<div class="col-75">
-					<input type="number" id="Id" name="Id"
-						th:field="*{Id}" placeholder="Contestant Id">
+					<input type="text" id="contestantId" name="contestantId"
+						th:field="*{contestantId}" placeholder="" readonly>
 				</div>
 			</div>
 			<div class="row">
-				<div class="row">
-					<div class="col-25">
-						<label for="dataArea">Submission</label>
-					</div>
-					<div class="col-75">
-						<input type="text" id="dataArea" name="dataArea"
-							th:field="*{dataArea}">
-					</div>
+				<div class="col-25">
+					<label for="fname">Contestant Data</label>
 				</div>
-				<div class="row">
-					<div class="col-25">
-						<label for="grade">Grade:wq</label>
-					</div>
-					<div class="col-75">
-						<input type="number" id="grade" name="grade"
-							th:field="*{grade}">
-					</div>
+				<div class="col-75">
+					<input type="text" id="dataArea" name="dataArea"
+						th:field="*{dataArea}" placeholder="" readonly>
 				</div>
 			</div>
-			<br>
 			<div class="row">
-				<input type="submit" value="Submit">
+				<div class="col-25">
+					<label for="fname">Grade Value</label>
+				</div>
+				<div class="col-75">
+					<input type="text" id="gradeValue" name="gradeValue"
+						th:field="*{gradeValue}" placeholder="">
+				</div>
 			</div>
-		</form>
+			</form>
 	</div>
 </body>
 
