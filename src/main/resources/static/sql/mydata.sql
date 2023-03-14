@@ -97,7 +97,18 @@ CREATE TABLE `wallet` (
   UNIQUE KEY `UK_3y9jbtvtnd4rm8xk3iu4wi6up` (`address`),
   KEY `FKbs4ogwiknsup4rpw8d47qw9dx` (`user_id`),
   CONSTRAINT `FKbs4ogwiknsup4rpw8d47qw9dx` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `grade` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `contestant_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `contestant_id` (`contestant_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `grade_ibfk_1` FOREIGN KEY (`contestant_id`) REFERENCES `contestant` (`id`),
+  CONSTRAINT `grade_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --SET FOREIGN_KEY_CHECKS = 0;
 --ALTER TABLE  `user` MODIFY COLUMN `id`  bigint NOT NULL AUTO_INCREMENT;

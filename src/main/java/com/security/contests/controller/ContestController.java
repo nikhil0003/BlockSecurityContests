@@ -3,6 +3,7 @@ package com.security.contests.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -120,7 +121,7 @@ public class ContestController {
 		boolean haveTojoin = false;
 		boolean joinedConstanst = false;
 		boolean isContestUser = false;
-		
+
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& user.getUserRoles().getRole().getName().equals("contestant")
@@ -134,30 +135,33 @@ public class ContestController {
 		if (!participentsListDb.isEmpty()
 				&& participentsListDb.stream().anyMatch(i -> i.getUser().getId().equals(user.getId()))) {
 			// already joined
-			if(isContestUser) {
+			if (isContestUser) {
 				joinedConstanst = true;
 			}
-			
-		}
-		else {
-			if(isContestUser)
-			 haveTojoin = true;
+
+		} else {
+			if (isContestUser)
+				haveTojoin = true;
 		}
 
-		if (!participentsListDb.isEmpty() && isContestUser ) {
-			Contestant contestant = participentsListDb.stream().filter(i -> i.getUser().getId().equals(user.getId()))
-					.findFirst().get();
-			model.addAttribute("contestant", contestant);
+		if (!participentsListDb.isEmpty() && isContestUser) {
+			Optional<Contestant> contestantOp = participentsListDb.stream()
+					.filter(i -> i.getUser().getId().equals(user.getId())).findFirst();
+			if (contestantOp.isPresent()) {
+				Contestant contestant = contestantOp.get();
+				model.addAttribute("contestant", contestant);
+			}
+
 		}
-		
+
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& (user.getUserRoles().getRole().getName().equals("judge"))) {
 			model.addAttribute("isJudge", true);
-			
+
 		}
-		if(!participentsListDb.isEmpty()) {
-			participentsListDb.forEach(i->{
+		if (!participentsListDb.isEmpty()) {
+			participentsListDb.forEach(i -> {
 				JudgeGradeDispaly jgd = new JudgeGradeDispaly();
 				jgd.setDataArea(i.getDataArea());
 				jgd.setContestantId(i.getId());
@@ -165,7 +169,7 @@ public class ContestController {
 				participentsList.add(jgd);
 			});
 			model.addAttribute("participentsList", participentsList);
-			
+
 		}
 		model.addAttribute("haveTojoin", haveTojoin);
 		model.addAttribute("joinedConstanst", joinedConstanst);
@@ -201,14 +205,12 @@ public class ContestController {
 		return "redirect:/contestList";
 
 	}
-	
+
 	@GetMapping("/SubmitGrade")
 	public String SubmitGrade() {
-		
+
 		return "redirect:/contestList";
 	}
-	
-	
 
 	@PostMapping(value = "/getGradeSubmissionForm")
 	public String getGradeSubmissionForm(@ModelAttribute("contestant") Contestant contestant,
