@@ -28,7 +28,7 @@ public class Contest {
 	
 	private Date endDate;
 
-	//private Long sponserAmount;
+	private Long sponserAmount;
 	
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contest")
@@ -153,11 +153,11 @@ public class Contest {
 	}
 
 
-//	public Long getSponserAmount() {
-//		return sponserAmount;
-//	}
-//
-//	public void setSponserAmount(Long sponserAmount) {
-//		this.sponserAmount = sponserAmount;
-//	}
+	public Long getSponserAmount() {
+		return sponserAmount;
+	}
+
+	public void setSponserAmount(Long sponserAmount) {
+		this.sponserAmount = sponserAmount;
+	}
 }
