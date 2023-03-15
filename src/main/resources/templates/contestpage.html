@@ -42,6 +42,21 @@ input[type=submit]:hover {
 	background-color: #45a049;
 }
 
+
+button[type="submit"] {
+	background-color: #08d;
+	border-radius: 12px;
+	border: 0;
+	box-sizing: border-box;
+	color: #eee;
+	cursor: pointer;
+	font-size: 18px;
+	height: 50px;
+	margin-top: 38px;
+	text-align: center;
+	width: 100%;
+}
+
 .container {
 	border-radius: 5px;
 	background-color: #f2f2f2;
@@ -110,7 +125,7 @@ input[type=submit]:hover {
 </head>
 <body>
 
-	<h2>Contest</h2>
+	<h2>Contest Details</h2>
 	<div class="container">
 		<form th:object="${contest}">
 			<div class="row">
@@ -182,10 +197,16 @@ input[type=submit]:hover {
 		</div>
 
 	</div>
+	
+   <form th:if="${isSponser}" th:action="@{/distributeRewards}" method="post">
+		<button type="submit" class="submit">Distribute Rewards</button>
+	</form>
 
 	<form th:action="@{/logout}" method="post">
 		<button type="submit" class="submit">Logout</button>
 	</form>
+
+
 </body>
 
 </html>

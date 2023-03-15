@@ -198,12 +198,14 @@ a:hover {
 			<button th:if="${isAdmin}" type="submit" class="submit">Initialize
 				DataBase</button>
 		</form>
+		<div class="subtitle">
+			Available Balance : <span th:text="${walletBalance}">Root </span>
+		</div>
 		<a th:if="${isSponser}" th:href="@{/createContest}">
-			<button type="button">createContest</button>
+			<button type="submit">createContest</button>
 		</a> <a th:href="@{/contestList}">
-			<button type="button">Contests</button>
+			<button type="submit">Contests</button>
 		</a>
-		<p style="background-color:powderblue;" th:text="${walletBalance}" />
 		<form th:action="@{/logout}" method="post">
 			<button type="submit" class="submit">Logout</button>
 		</form>

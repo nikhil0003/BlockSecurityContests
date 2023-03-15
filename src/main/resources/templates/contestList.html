@@ -38,6 +38,21 @@ input[type=submit] {
 	float: right;
 }
 
+
+button[type="submit"] {
+	background-color: #08d;
+	border-radius: 12px;
+	border: 0;
+	box-sizing: border-box;
+	color: #eee;
+	cursor: pointer;
+	font-size: 18px;
+	height: 50px;
+	margin-top: 38px;
+	text-align: center;
+	width: 100%;
+}
+
 input[type=submit]:hover {
 	background-color: #45a049;
 }
@@ -110,7 +125,7 @@ input[type=submit]:hover {
 </head>
 <body>
 
-	<h2>Contest</h2>
+	<h2>List of Contest</h2>
 	<div class="container">
 		<table th:if="${ not#lists.isEmpty(contestList)}" id="judge">
 			<tr>

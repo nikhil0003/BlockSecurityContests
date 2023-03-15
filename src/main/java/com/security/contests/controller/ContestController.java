@@ -163,6 +163,11 @@ public class ContestController {
 			model.addAttribute("isJudge", true);
 
 		}
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& user.getUserRoles().getRole().getName().equals("sponser")) {
+			model.addAttribute("isSponser", true);
+		}
 		if (!participentsListDb.isEmpty()) {
 			participentsListDb.forEach(i -> {
 				JudgeGradeDispaly jgd = new JudgeGradeDispaly();
