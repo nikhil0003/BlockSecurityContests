@@ -200,7 +200,17 @@ public class ContestController {
 	}
 
 	@GetMapping("/submission/{id}")
-	public String SubmissionContestantData(@PathVariable("id") Long contestantId,
+	public String SubmissionContestantData(@ModelAttribute("contestant") Contestant contestant, @PathVariable Long id,
+			@ModelAttribute("contest") CreateConstestModel contest) {
+		if (id != null) {
+			customDAO.joinSubmission(id, contestant.getDataArea());
+		}
+		return "redirect:/contestList";
+		
+	}
+	
+	@GetMapping("/gradeSubmission/{id}")
+	public String gradeContestantData(@PathVariable("id") Long contestantId,
 			@AuthenticationPrincipal User user, Model model) {
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
