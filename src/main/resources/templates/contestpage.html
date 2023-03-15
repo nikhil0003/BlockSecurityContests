@@ -170,21 +170,22 @@ input[type=submit]:hover {
 					<th>ContestantData</th>
 				</tr>
 				<tr th:each="pl, itemStat : *{participentsList}">
-					<td th:field="*{participentsList[__${itemStat.index}__].contestantId}"
+					<td
+						th:field="*{participentsList[__${itemStat.index}__].contestantId}"
 						th:text="*{participentsList[__${itemStat.index}__].contestantId}"
-						th:onclick="|window.location.href='/gradeSubmission/${participentsList[__${itemStat.index}__].contestantId}'|"></td>
+						th:onclick="|window.location.href='/gradeSubmission/${participentsList[__${itemStat.index}__].contestantId}/${participentsList[__${itemStat.index}__].contestId}'|"></td>
 					<td th:field="*{participentsList[__${itemStat.index}__].dataArea}"
 						th:text="*{participentsList[__${itemStat.index}__].dataArea}"
-						th:onclick="|window.location.href='/gradeSubmission/${participentsList[__${itemStat.index}__].contestantId}'|"></td>
+						th:onclick="|window.location.href='/gradeSubmission/${participentsList[__${itemStat.index}__].contestantId}/${participentsList[__${itemStat.index}__].contestId}'|"></td>
 				</tr>
 			</table>
 		</div>
 
 	</div>
-	
+
 	<form th:action="@{/logout}" method="post">
-			<button type="submit" class="submit">Logout</button>
-		</form>
+		<button type="submit" class="submit">Logout</button>
+	</form>
 </body>
 
 </html>

@@ -111,9 +111,11 @@ input[type=submit]:hover {
 <body>
 
 	<h2>Grade Submission of Contestant</h2>
-	<p>Please grade value between 1 to 10 </p>
+	<p>Please grade value between 1 to 10</p>
 	<div class="container">
-		<form  th:object="${jdg}" >
+
+		<form th:object="${jdg}" th:action="@{'/submitGrade/' +${contestId}}"
+			method="post">
 			<div class="row">
 				<div class="col-25">
 					<label for="fname">Contestant Id</label>
@@ -132,7 +134,7 @@ input[type=submit]:hover {
 						th:field="*{dataArea}" placeholder="" readonly>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" th:if="${alreadyGraded} == false">
 				<div class="col-25">
 					<label for="fname">Grade Value</label>
 				</div>
@@ -140,9 +142,16 @@ input[type=submit]:hover {
 					<input type="text" id="gradeValue" name="gradeValue"
 						th:field="*{gradeValue}" placeholder="">
 				</div>
+				<div th:if="${alreadyGraded} == true">Already Graded</div>
 			</div>
-			</form>
+			<button th:if="${alreadyGraded} == false" type="submit"
+				class="submit">submit</button>
+		</form>
 	</div>
+
+	<form th:action="@{/logout}" method="post">
+		<button type="submit" class="submit">Logout</button>
+	</form>
 </body>
 
 </html>

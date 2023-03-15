@@ -169,6 +169,7 @@ public class ContestController {
 				jgd.setDataArea(i.getDataArea());
 				jgd.setContestantId(i.getId());
 				jgd.setJudgeId(user.getId());
+				jgd.setContestId(id);
 				participentsList.add(jgd);
 			});
 			model.addAttribute("participentsList", participentsList);
@@ -206,12 +207,12 @@ public class ContestController {
 			customDAO.joinSubmission(id, contestant.getDataArea());
 		}
 		return "redirect:/contestList";
-		
+
 	}
-	
-	@GetMapping("/gradeSubmission/{id}")
-	public String gradeContestantData(@PathVariable("id") Long contestantId,
-			@AuthenticationPrincipal User user, Model model) {
+
+	@GetMapping("/gradeSubmission/{id}/{contestId}")
+	public String gradeContestantData(@PathVariable("id") Long contestantId, @AuthenticationPrincipal User user,
+			Model model, @PathVariable("contestId") Long contestId) {
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& (user.getUserRoles().getRole().getName().equals("judge")) && contestantId != null) {
@@ -221,6 +222,14 @@ public class ContestController {
 			jgd.setDataArea(contestant.getDataArea());
 			jgd.setJudgeId(user.getId());
 			model.addAttribute("jdg", jgd);
+			model.addAttribute("contestId", contestId);
+			Object[] grade = customDAO.getGradeData(jgd, contestant, user.getId(), contestId);
+			if (grade != null) {
+				model.addAttribute("alreadyGraded", true);
+			}
+			else {
+				model.addAttribute("alreadyGraded", false);
+			}
 			return "gradeSubmission";
 
 		} else
@@ -228,12 +237,20 @@ public class ContestController {
 
 	}
 
-	@GetMapping("/submitGrade")
-	public String SubmitGrade(@ModelAttribute("jdg") JudgeGradeDispaly jgd) {
-		
+	@PostMapping("/submitGrade/{contestId}")
+	public String SubmitGrade(@ModelAttribute("jdg") JudgeGradeDispaly jgd, @AuthenticationPrincipal User user,
+			@PathVariable("contestId") Long contestId,Model model) {
+		Contestant contestant = customDAO.findByContestantId(jgd.getContestantId());
+		Object[] grade = customDAO.getGradeData(jgd, contestant, user.getId(), contestId);
+		if (grade != null) {
+			model.addAttribute("alreadyGraded", true);
+		}
+		else {
+			int success = customDAO.saveGradewithJudgeId(jgd, contestant, user.getId(), contestId);
+			model.addAttribute("alreadyGraded", false);
+		}
 		return "redirect:/contestList";
 	}
-
 
 //	@GetMapping(value = "/distributeRewards")
 //	public String distributeRewards(@ModelAttribute("contest") Contest contest, HttpServletRequest request,

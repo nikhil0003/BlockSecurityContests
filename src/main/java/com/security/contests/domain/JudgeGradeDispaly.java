@@ -9,6 +9,8 @@ public class JudgeGradeDispaly {
 	public String dataArea;
 
 	public Long gradeValue;
+	
+	public Long contestId;
 
 	/**
 	 * @return the judgeId
@@ -64,6 +66,20 @@ public class JudgeGradeDispaly {
 	 */
 	public void setGradeValue(Long gradeValue) {
 		this.gradeValue = gradeValue;
+	}
+
+	/**
+	 * @return the contestId
+	 */
+	public Long getContestId() {
+		return contestId;
+	}
+
+	/**
+	 * @param contestId the contestId to set
+	 */
+	public void setContestId(Long contestId) {
+		this.contestId = contestId;
 	}
 	
 	

@@ -4,10 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.security.contests.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
+
+import com.security.contests.domain.Contest;
+import com.security.contests.domain.Contestant;
+import com.security.contests.domain.CreateConstestModel;
+import com.security.contests.domain.JudgeDisplay;
+import com.security.contests.domain.JudgeGradeDispaly;
+import com.security.contests.domain.Role;
+import com.security.contests.domain.User;
+import com.security.contests.domain.UserRole;
+import com.security.contests.domain.Wallet;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -359,6 +368,9 @@ public class CustomDAOImpl implements CustomDAO {
 				contestant.setId((Long) ob[0]);
 				contestant.setDataArea((String) ob[1]);
 				contestant.setGrade((Long) ob[2]);
+				User user = new User();
+				user.setId((Long) ob[4]);
+				contestant.setUser(user);
 				return contestant;
 			} else {
 				return null;
@@ -366,6 +378,49 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	
+	}
+	
+	public int SaveGradeIdInContestant(Long contestantId, Long gradeId) {
+		final String sql = "UPDATE contestant SET grade = ? WHERE id = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, gradeId);
+		query.setParameter(2, contestantId);
+		return query.executeUpdate();
+	}
+	
+	public Object[] getGradeData(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId) {
+		final String checkSql = "select count(*) from grade where contestant_id = (?) and "
+				+ "contest_id = (?) and user_id =(?) and judge_id =(?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, jgd.getContestantId());
+		checkquery.setParameter(2, contestId);
+		checkquery.setParameter(3, contestant.getUser().getId());
+		checkquery.setParameter(4, judgeId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String Sql = "select * from grade where contestant_id = (?) and "
+					+ "contest_id = (?) and user_id =(?) and judge_id =(?)";
+			Query query = em.createNativeQuery(Sql);
+			query.setParameter(1, jgd.getContestantId());
+			query.setParameter(2, contestId);
+			query.setParameter(3, contestant.getUser().getId());
+			query.setParameter(4, judgeId);
+			Object[] ob = (Object[]) query.getSingleResult();
+			return ob;
+		}
+		return null;
+	}
+	
+	public int saveGradewithJudgeId(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId) {
+			final String sql = "INSERT INTO grade(contestant_id,contest_id,user_id,gradeValue,judge_id) values(?,?,?,?,?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, jgd.getContestantId());
+			query.setParameter(2, contestId);
+			query.setParameter(3, contestant.getUser().getId());
+			query.setParameter(4, jgd.getGradeValue());
+			query.setParameter(5, judgeId);
+			return query.executeUpdate();
+		}
 	}
 	
 //	public ArrayList<Judge> findJudgesBycontestId(Long id){
@@ -393,4 +448,4 @@ public class CustomDAOImpl implements CustomDAO {
 //		return null;
 //	}
 
-}
+

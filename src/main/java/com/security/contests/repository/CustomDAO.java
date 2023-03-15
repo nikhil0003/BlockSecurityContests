@@ -51,5 +51,11 @@ public interface CustomDAO {
 	int joinSubmission(Long id, String data);
 	
     Contestant findByContestantId(Long id);
+    
+    Object[] getGradeData(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId);
+    
+    int saveGradewithJudgeId(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId);
+    
+    int SaveGradeIdInContestant(Long contestantId, Long gradeId);
 
 }
