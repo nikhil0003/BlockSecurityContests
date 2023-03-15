@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.security.contests.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,6 +21,7 @@ import com.security.contests.domain.CreateConstestModel;
 import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.JudgeGradeDispaly;
 import com.security.contests.domain.User;
+import com.security.contests.domain.Wallet;
 import com.security.contests.repository.CustomDAO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -229,7 +229,8 @@ public class ContestController {
 	}
 
 	@GetMapping("/submitGrade")
-	public String SubmitGrade() {
+	public String SubmitGrade(@ModelAttribute("jdg") JudgeGradeDispaly jgd) {
+		
 		return "redirect:/contestList";
 	}
 

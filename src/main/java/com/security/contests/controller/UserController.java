@@ -22,8 +22,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RoleRepository roleRepository;
 
 	@GetMapping("/login")
 	public String login() {

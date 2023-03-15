@@ -105,10 +105,12 @@ CREATE TABLE `grade` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `contestant_id` bigint DEFAULT NULL,
   `user_id` bigint DEFAULT NULL,
+  `contest_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `contestant_id` (`contestant_id`),
   KEY `user_id` (`user_id`),
+  KEY `contest_id` (`contest_id`),
   CONSTRAINT `grade_ibfk_1` FOREIGN KEY (`contestant_id`) REFERENCES `contestant` (`id`),
-  CONSTRAINT `grade_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `grade_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `grade_ibfk_3` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-SET FOREIGN_KEY_CHECKS = 1;
