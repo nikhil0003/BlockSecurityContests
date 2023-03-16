@@ -2,7 +2,7 @@ use securitycontest;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS user,role,user_role,contest,contestant,judge,ledger,sponser,wallet;
+DROP TABLE IF EXISTS user,role,user_role,contest,contestant,judge,ledger,sponser,wallet,grade;
 
 
 CREATE TABLE `user` (
@@ -117,5 +117,5 @@ CREATE TABLE `grade` (
   CONSTRAINT `grade_ibfk_1` FOREIGN KEY (`contestant_id`) REFERENCES `contestant` (`id`),
   CONSTRAINT `grade_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `grade_ibfk_3` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`),
-  CONSTRAINT `grade_ibfk_4` FOREIGN KEY (`judge_id`) REFERENCES `judge` (`id`)
+  CONSTRAINT `grade_ibfk_4` FOREIGN KEY (`judge_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

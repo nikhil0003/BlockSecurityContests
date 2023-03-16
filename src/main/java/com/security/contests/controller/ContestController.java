@@ -270,7 +270,7 @@ public class ContestController {
 	@GetMapping(value = "/distributeRewards/{id}")
 	public String distributeRewards(HttpServletRequest request, Model model, @PathVariable Long id) {
 		Contest contest = customDAO.findByContestId(id);
-		if (contest.getSponserAmount() != null && contest.getEndDate().compareTo(new Date())>0) {
+		if (contest.getSponserAmount() != null && contest.getEndDate().compareTo(new Date())<0) {
 			ArrayList<Contestant> participentsListDb = customDAO.listContestantForContest(contest);
 			List<Judge> judges = customDAO.findJudgesBycontestId(id, contest);
 			if (judges != null && !judges.isEmpty()) {
