@@ -57,5 +57,9 @@ public interface CustomDAO {
     int saveGradewithJudgeId(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId);
     
     int SaveGradeIdInContestant(Long contestantId, Long gradeId);
+    
+    ArrayList<Judge> findJudgesBycontestId(Long id, Contest contest);
+    
+    ArrayList<Grade> findGradesBycontestId(Long id, Contest contest);
 
 }

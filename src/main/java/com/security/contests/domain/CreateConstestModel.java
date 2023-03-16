@@ -20,6 +20,8 @@ public class CreateConstestModel implements Serializable {
 	
 	public ArrayList<JudgeDisplay> jdlist;
 	
+	public Long sponserAmount;
+	
     @DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date startDate;
 	
@@ -96,6 +98,20 @@ public class CreateConstestModel implements Serializable {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the sponserAmount
+	 */
+	public Long getSponserAmount() {
+		return sponserAmount;
+	}
+
+	/**
+	 * @param sponserAmount the sponserAmount to set
+	 */
+	public void setSponserAmount(Long sponserAmount) {
+		this.sponserAmount = sponserAmount;
 	}
 	
 

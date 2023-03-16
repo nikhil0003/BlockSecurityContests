@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import com.security.contests.domain.Contest;
 import com.security.contests.domain.Contestant;
 import com.security.contests.domain.CreateConstestModel;
+import com.security.contests.domain.Grade;
+import com.security.contests.domain.Judge;
 import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.JudgeGradeDispaly;
 import com.security.contests.domain.Role;
@@ -166,11 +168,12 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	public int saveContestData(CreateConstestModel ccm) {
-		final String sql = "INSERT INTO contest(name,start_date,end_date) values(?,?,?)";
+		final String sql = "INSERT INTO contest(name,start_date,end_date,sponserAmount) values(?,?,?,?)";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, ccm.getFirstname());
 		query.setParameter(2, ccm.getStartDate());
 		query.setParameter(3, ccm.getEndDate());
+		query.setParameter(4, ccm.getSponserAmount());
 		return query.executeUpdate();
 	}
 
@@ -250,6 +253,7 @@ public class CustomDAOImpl implements CustomDAO {
 				jd.setName((String) ob[2]);
 				jd.setEndDate((Date) ob[1]);
 				jd.setStartDate((Date) ob[3]);
+				jd.setSponserAmount((Long) ob[4]);
 				return jd;
 			} else {
 				return null;
@@ -303,8 +307,7 @@ public class CustomDAOImpl implements CustomDAO {
 		return query.executeUpdate();
 	}
 
-	
-	public 	User findByUseName(String name) {
+	public User findByUseName(String name) {
 		final String checkSql = "select count(*) from user where username = (?)";
 		Query checkquery = em.createNativeQuery(checkSql);
 		checkquery.setParameter(1, name);
@@ -316,9 +319,9 @@ public class CustomDAOImpl implements CustomDAO {
 			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
 			User user = new User();
 			if (ob != null) {
-				user.setId((Long)ob[0]);
+				user.setId((Long) ob[0]);
 				user.setUsername(name);
-				user.setPassword((String)ob[3]);
+				user.setPassword((String) ob[3]);
 				return user;
 			} else {
 				return null;
@@ -326,7 +329,7 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	}
-	
+
 	public UserRole findByUserIdUserRole(User use) {
 		final String checkSql = "select count(*) from user_role where user_id = (?)";
 		Query checkquery = em.createNativeQuery(checkSql);
@@ -351,7 +354,7 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	}
-	
+
 	public Contestant findByContestantId(Long id) {
 
 		final String checkSql = "select count(*) from contestant where id = (?)";
@@ -377,9 +380,9 @@ public class CustomDAOImpl implements CustomDAO {
 			}
 		}
 		return null;
-	
+
 	}
-	
+
 	public int SaveGradeIdInContestant(Long contestantId, Long gradeId) {
 		final String sql = "UPDATE contestant SET grade = ? WHERE id = ?";
 		Query query = em.createNativeQuery(sql);
@@ -387,7 +390,7 @@ public class CustomDAOImpl implements CustomDAO {
 		query.setParameter(2, contestantId);
 		return query.executeUpdate();
 	}
-	
+
 	public Object[] getGradeData(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId) {
 		final String checkSql = "select count(*) from grade where contestant_id = (?) and "
 				+ "contest_id = (?) and user_id =(?) and judge_id =(?)";
@@ -410,42 +413,69 @@ public class CustomDAOImpl implements CustomDAO {
 		}
 		return null;
 	}
-	
+
 	public int saveGradewithJudgeId(JudgeGradeDispaly jgd, Contestant contestant, Long judgeId, Long contestId) {
-			final String sql = "INSERT INTO grade(contestant_id,contest_id,user_id,gradeValue,judge_id) values(?,?,?,?,?)";
+		final String sql = "INSERT INTO grade(contestant_id,contest_id,user_id,gradeValue,judge_id) values(?,?,?,?,?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, jgd.getContestantId());
+		query.setParameter(2, contestId);
+		query.setParameter(3, contestant.getUser().getId());
+		query.setParameter(4, jgd.getGradeValue());
+		query.setParameter(5, judgeId);
+		return query.executeUpdate();
+	}
+
+	public ArrayList<Judge> findJudgesBycontestId(Long id, Contest contest) {
+		final String checkSql = "select count(*) from contest c , judge j where c.id = j.contest_id and contest_id = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, id);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from contest c , judge j where c.id = j.contest_id and contest_id = (?)";
 			Query query = em.createNativeQuery(sql);
-			query.setParameter(1, jgd.getContestantId());
-			query.setParameter(2, contestId);
-			query.setParameter(3, contestant.getUser().getId());
-			query.setParameter(4, jgd.getGradeValue());
-			query.setParameter(5, judgeId);
-			return query.executeUpdate();
+			query.setParameter(1, id);
+			List<Object> objList = query.getResultList();
+			ArrayList<Judge> list = new ArrayList<Judge>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				Judge jd = new Judge();
+				jd.setId((Long) ob[0]);
+				User user = new User();
+				user.setId((Long) ob[7]);
+				jd.setContest(contest);
+				jd.setUser(user);
+				list.add(jd);
+			}
+			return list;
 		}
+		return null;
 	}
 	
-//	public ArrayList<Judge> findJudgesBycontestId(Long id){
-//		final String checkSql = "select count(*) from contest c , judge j where c.id = j.contest_id and contest_id = (?)";
-//		Query checkquery = em.createNativeQuery(checkSql);
-//		checkquery.setParameter(1, id);
-//		Long present = (Long) checkquery.getSingleResult();
-//		if (present > 0L) {
-//			final String sql = "select * from user_role where user_id = (?)";
-//			Query query = em.createNativeQuery(sql);
-//			query.setParameter(1, id);
-//			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
-//			UserRole user = new UserRole();
-//			if (ob != null) {
-//				user.setUserRoleId((Long) ob[0]);
-//				user.setUser(use);
-//				Role role = new Role();
-//				role.setRoleId((Long) ob[1]);
-//				user.setRole(role);
-//				return user;
-//			} else {
-//				return null;
-//			}
-//		}
-//		return null;
-//	}
-
-
+	@SuppressWarnings("unchecked")
+	public ArrayList<Grade> findGradesBycontestId(Long id, Contest contest) {
+		final String checkSql = "select count(*) from grade where contest_id = (?)";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, id);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from grade where contest_id = (?)";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, id);
+			List<Object> objList = query.getResultList();
+			ArrayList<Grade> list = new ArrayList<Grade>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				Grade grade = new Grade();
+				grade.setId((Long) ob[0]);
+				grade.setContestantId((Long)ob[1]);
+				grade.setUserId((Long)ob[2]);
+				grade.setContestId((Long)ob[3]);
+				grade.setJudgeId((Long)ob[4]);
+				grade.setGradeValue((Long)ob[4]);
+				list.add(grade);
+			}
+			return list;
+		}
+		return null;
+	}
+}

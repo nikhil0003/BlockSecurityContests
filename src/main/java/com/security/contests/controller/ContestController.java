@@ -2,8 +2,11 @@ package com.security.contests.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +21,8 @@ import com.security.contests.config.MyDataBaseConfiguration;
 import com.security.contests.domain.Contest;
 import com.security.contests.domain.Contestant;
 import com.security.contests.domain.CreateConstestModel;
+import com.security.contests.domain.Grade;
+import com.security.contests.domain.Judge;
 import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.JudgeGradeDispaly;
 import com.security.contests.domain.User;
@@ -73,7 +78,7 @@ public class ContestController {
 	}
 
 	@PostMapping("/PostcreateContest")
-	public String createContest(@ModelAttribute("ccm") CreateConstestModel ccm, Model model) {
+	public String createContest(@ModelAttribute("ccm") CreateConstestModel ccm, Model model, @AuthenticationPrincipal User user) {
 		if (!ccm.getJdlist().isEmpty()) {
 			long jds = ccm.getJdlist().stream().filter(i -> i.isJudgeSno()).count();
 			if (jds > 5 && jds < 10) {
@@ -96,6 +101,12 @@ public class ContestController {
 		}
 
 		if (saveContestJudge > 0) {
+
+			Wallet wallet = customDAO.findWalletByUserId(user.getId());
+			customDAO.updateWalletData(user.getId(), wallet.getBalance()-ccm.getSponserAmount());
+			customDAO.saveLedgerData(wallet.getId(), -ccm.getSponserAmount(), "Contest Debited");
+
+		
 			return "redirect:/contestList";
 		} else {
 			return "createContest";
@@ -119,6 +130,7 @@ public class ContestController {
 			contest.setFirstname(contestData.getName());
 			contest.setEndDate(contestData.getEndDate());
 			contest.setId(contestData.getId());
+			contest.setSponserAmount(contestData.getSponserAmount());
 		}
 
 		boolean haveTojoin = false;
@@ -231,8 +243,7 @@ public class ContestController {
 			Object[] grade = customDAO.getGradeData(jgd, contestant, user.getId(), contestId);
 			if (grade != null) {
 				model.addAttribute("alreadyGraded", true);
-			}
-			else {
+			} else {
 				model.addAttribute("alreadyGraded", false);
 			}
 			return "gradeSubmission";
@@ -244,15 +255,55 @@ public class ContestController {
 
 	@PostMapping("/submitGrade/{contestId}")
 	public String SubmitGrade(@ModelAttribute("jdg") JudgeGradeDispaly jgd, @AuthenticationPrincipal User user,
-			@PathVariable("contestId") Long contestId,Model model) {
+			@PathVariable("contestId") Long contestId, Model model) {
 		Contestant contestant = customDAO.findByContestantId(jgd.getContestantId());
 		Object[] grade = customDAO.getGradeData(jgd, contestant, user.getId(), contestId);
 		if (grade != null) {
 			model.addAttribute("alreadyGraded", true);
-		}
-		else {
+		} else {
 			int success = customDAO.saveGradewithJudgeId(jgd, contestant, user.getId(), contestId);
 			model.addAttribute("alreadyGraded", false);
+		}
+		return "redirect:/contestList";
+	}
+
+	@GetMapping(value = "/distributeRewards/{id}")
+	public String distributeRewards(HttpServletRequest request, Model model, @PathVariable Long id) {
+		Contest contest = customDAO.findByContestId(id);
+		if (contest.getSponserAmount() != null && contest.getEndDate().compareTo(new Date())>0) {
+			ArrayList<Contestant> participentsListDb = customDAO.listContestantForContest(contest);
+			List<Judge> judges = customDAO.findJudgesBycontestId(id, contest);
+			if (judges != null && !judges.isEmpty()) {
+				Long judgesAmount = (long) (contest.getSponserAmount() * 0.20);
+				Long eachJudgeAmount = judgesAmount / judges.size();
+				judges.forEach(i -> {
+					Wallet wallet = customDAO.findWalletByUserId(i.getUser().getId());
+					customDAO.updateWalletData(i.getUser().getId(), wallet.getBalance()+eachJudgeAmount);
+					customDAO.saveLedgerData(wallet.getId(), eachJudgeAmount, "Contest Rewards");
+
+				});
+			}
+			Long contestsAmount = (long) (contest.getSponserAmount() * 0.80);
+			List<Grade> grades = customDAO.findGradesBycontestId(id, contest);
+			Map<Long, List<Grade>> participantGrades = grades.stream().collect(Collectors.groupingBy(Grade::getUserId));
+			Map<Long, Long> participantAvergaeGrades = new HashMap<>();
+			Map<Long, Long> participantAmount = new HashMap<>();
+			participantGrades.forEach((k, v) -> {
+				double avergaeGrade = v.stream().filter(i -> i != null && i.getGradeValue() != null)
+						.mapToLong(mapper -> mapper.getGradeValue()).average().orElse(0L);
+				participantAvergaeGrades.put(k, (long) avergaeGrade);
+			});
+			Long totalGrade = participantAvergaeGrades.values().stream().mapToLong(Long::longValue)
+					  .sum();
+			Long eachPart = contestsAmount / totalGrade;
+			// save Contest Amount
+			participantAvergaeGrades.forEach((k, v) -> {
+				participantAmount.put(k, v * eachPart);
+				Wallet wallet = customDAO.findWalletByUserId(k);
+				customDAO.updateWalletData(k, wallet.getBalance()+(v * eachPart));
+				customDAO.saveLedgerData(wallet.getId(), v * eachPart, "Contest Rewards");
+
+			});
 		}
 		return "redirect:/contestList";
 	}
