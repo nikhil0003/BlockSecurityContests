@@ -1,18 +1,26 @@
 package com.security.contests.repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import com.security.contests.domain.*;
+import com.security.contests.domain.Contest;
+import com.security.contests.domain.Contestant;
+import com.security.contests.domain.CreateConstestModel;
+import com.security.contests.domain.Grade;
+import com.security.contests.domain.Judge;
+import com.security.contests.domain.JudgeDisplay;
+import com.security.contests.domain.JudgeGradeDispaly;
+import com.security.contests.domain.Role;
+import com.security.contests.domain.User;
+import com.security.contests.domain.UserRole;
+import com.security.contests.domain.Wallet;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Transactional
 @Component

@@ -17,8 +17,8 @@ logging:
 spring:
   datasource:
     url : jdbc:mysql://localhost:3306/securitycontest
-    username: root
-    password: vinod
+    username: admin
+    password: admin
   jpa :
     hibernate:
       #ddl-auto: create-drop
