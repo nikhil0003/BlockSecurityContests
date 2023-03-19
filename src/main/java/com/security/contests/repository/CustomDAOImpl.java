@@ -1,24 +1,14 @@
 package com.security.contests.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.security.contests.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
-
-import com.security.contests.domain.Contest;
-import com.security.contests.domain.Contestant;
-import com.security.contests.domain.CreateConstestModel;
-import com.security.contests.domain.Grade;
-import com.security.contests.domain.Judge;
-import com.security.contests.domain.JudgeDisplay;
-import com.security.contests.domain.JudgeGradeDispaly;
-import com.security.contests.domain.Role;
-import com.security.contests.domain.User;
-import com.security.contests.domain.UserRole;
-import com.security.contests.domain.Wallet;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -174,6 +164,15 @@ public class CustomDAOImpl implements CustomDAO {
 		query.setParameter(2, ccm.getStartDate());
 		query.setParameter(3, ccm.getEndDate());
 		query.setParameter(4, ccm.getSponserAmount());
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int saveSponserData(Long contestId, Long userId) {
+		final String sql = "INSERT INTO sponser(contest_id, user_id) values(?,?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, contestId);
+		query.setParameter(2, userId);
 		return query.executeUpdate();
 	}
 

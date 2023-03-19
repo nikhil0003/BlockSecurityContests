@@ -32,6 +32,8 @@ public interface CustomDAO {
 
 	int saveContestData(CreateConstestModel ccm);
 
+	int saveSponserData(Long contestId, Long userId);
+
 	Contest findByContest(String name);
 
 	int saveContestJudge(Contest contestName, CreateConstestModel ccm);

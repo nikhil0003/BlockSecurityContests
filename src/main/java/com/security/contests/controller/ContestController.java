@@ -93,6 +93,8 @@ public class ContestController {
 			if (contestSave > 0) {
 				contestName = customDAO.findByContest(ccm.getFirstname());
 				saveContestJudge = customDAO.saveContestJudge(contestName, ccm);
+
+				int sponserSave = customDAO.saveSponserData(contestName.getId(), user.getId());
 			}
 
 		} else {
