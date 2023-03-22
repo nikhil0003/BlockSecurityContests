@@ -123,6 +123,24 @@ public class ContestController {
 		return "contestList";
 	}
 
+	@GetMapping("/dashboard")
+	public String getDashboard(Model model) {
+		List<User> bigSponsors = customDAO.getBigSponsers();
+		List<User> bigContestants = customDAO.getBigContestants();
+		List<Contest> commonContests = customDAO.getCommonContests(8L, 9L);
+		List<User> sleepyContestants = customDAO.getSleepyContestants();
+		List<User> busyJudges = customDAO.getBusyJudges();
+		List<Contest> toughContests = customDAO.getToughContests();
+		model.addAttribute("bigSponsors", bigSponsors);
+		model.addAttribute("bigContestants", bigContestants);
+		model.addAttribute("commonContests", commonContests);
+		model.addAttribute("sleepyContestants", sleepyContestants);
+		model.addAttribute("busyJudges", busyJudges);
+		model.addAttribute("toughContests", toughContests);
+
+		return "dashboard";
+	}
+
 	@GetMapping("/contest/{id}")
 	public String getContestPage(Model model, @PathVariable Long id, @AuthenticationPrincipal User user) {
 		Contest contestData = customDAO.findByContestId(id);

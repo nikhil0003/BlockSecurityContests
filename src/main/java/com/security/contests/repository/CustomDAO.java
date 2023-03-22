@@ -1,6 +1,7 @@
 package com.security.contests.repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.security.contests.domain.*;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,18 @@ public interface CustomDAO {
 	ArrayList<Contest> listContests();
 
 	Contest findByContestId(Long Id);
+
+	List<User> getBigSponsers();
+
+	List<User> getBigContestants();
+
+	List<Contest> getCommonContests(Long userId1, Long userId2);
+
+	List<User> getSleepyContestants();
+
+	List<User> getBusyJudges();
+
+	List<Contest> getToughContests();
 
 	ArrayList<Contestant> listContestantForContest(Contest contest);
 	

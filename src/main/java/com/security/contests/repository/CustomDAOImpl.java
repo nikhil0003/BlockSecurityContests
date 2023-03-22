@@ -269,6 +269,143 @@ public class CustomDAOImpl implements CustomDAO {
 		return null;
 	}
 
+	@Override
+	public List<User> getBigSponsers() {
+		final String bigSponsersQuery = "select sponser_contests.user_id from (\n" +
+				"SELECT user_id as user_id, count(distinct contest_id) as total_contests FROM sponser\n" +
+				"group by user_id having count(distinct contest_id)\n" +
+				") as sponser_contests where sponser_contests.total_contests = (\n" +
+				"select MAX(sc.total_contests) from (\n" +
+				"SELECT user_id as user_id, count(distinct contest_id) as total_contests FROM sponser\n" +
+				"group by user_id having count(distinct contest_id)\n" +
+				") as sc\n" +
+				");";
+		Query q = em.createNativeQuery(bigSponsersQuery, Long.class);
+		List<Long> list = q.getResultList();
+
+		final String sql = "select * from user where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<User> users = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			User user = new User();
+			user.setId((Long) ob[0]);
+			user.setUsername((String) ob[5]);
+			users.add(user);
+		}
+		return users;
+	}
+
+	@Override
+	public List<User> getBigContestants() {
+		final String bigContestantsQuery = "select w.user_id  from wallet w where w.balance = (\n" +
+				"select max(w1.balance) from wallet w1, user_role ur where ur.user_id = w1.user_id and ur.role_id = 3\n" +
+				") and w.user_id in (select ur1.user_id as contestant_user_id from user_role ur1 where ur1.role_id = 3);";
+		Query q = em.createNativeQuery(bigContestantsQuery, Long.class);
+		List<Long> list = q.getResultList();
+		final String sql = "select * from user where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<User> users = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			User user = new User();
+			user.setId((Long) ob[0]);
+			user.setUsername((String) ob[5]);
+			users.add(user);
+		}
+		return users;
+	}
+
+	@Override
+	public List<Contest> getCommonContests(final Long userId1, final Long userId2) {
+		final String commonContestsQuery = "SELECT ct1.contest_id FROM contestant as ct1 where ct1.user_id in (?, ?)\n" +
+				"group by ct1.contest_id having count(ct1.user_id) = 2;";
+		Query q = em.createNativeQuery(commonContestsQuery, Long.class);
+		q.setParameter(1, userId1);
+		q.setParameter(2, userId2);
+		List<Long> list = q.getResultList();
+		final String sql = "select * from contest where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<Contest> contests = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			Contest contest = new Contest();
+			contest.setId((Long) ob[0]);
+			contest.setName((String) ob[2]);
+			contests.add(contest);
+		}
+		return contests;
+	}
+
+	@Override
+	public List<User> getSleepyContestants() {
+		final String sleepyContestantsQuery = "select u.id from user u inner join user_role ur on ur.user_id = u.id\n" +
+				"inner join role r on r.role_id = ur.role_id\n" +
+				"where r.name = 'contestant'\n" +
+				"and u.id not in (SELECT user_id FROM contestant);";
+		Query q = em.createNativeQuery(sleepyContestantsQuery, Long.class);
+		List<Long> list = q.getResultList();
+		final String sql = "select * from user where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<User> users = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			User user = new User();
+			user.setId((Long) ob[0]);
+			user.setUsername((String) ob[5]);
+			users.add(user);
+		}
+		return users;
+	}
+
+	@Override
+	public List<User> getBusyJudges() {
+		final String busyJudgesQuery = "select user_id from judge group by user_id order by count(*) desc;";
+		Query q = em.createNativeQuery(busyJudgesQuery, Long.class);
+		List<Long> list = q.getResultList();
+		final String sql = "select * from user where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<User> users = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			User user = new User();
+			user.setId((Long) ob[0]);
+			user.setUsername((String) ob[5]);
+			users.add(user);
+		}
+		return users;
+	}
+
+	@Override
+	public List<Contest> getToughContests() {
+		final String toughContestsQuery = "select contest_id from contestant group by contest_id having count(user_id) < 10;;";
+		Query q = em.createNativeQuery(toughContestsQuery, Long.class);
+		List<Long> list = q.getResultList();
+		final String sql = "select * from contest where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, list);
+		List<Object> objList = query.getResultList();
+		List<Contest> contests = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			Contest contest = new Contest();
+			contest.setId((Long) ob[0]);
+			contest.setName((String) ob[2]);
+			contests.add(contest);
+		}
+		return contests;
+	}
+
 	public ArrayList<Contestant> listContestantForContest(Contest contest) {
 		final String checkSql = "select count(*) from contestant where contest_id = (?)";
 		Query checkquery = em.createNativeQuery(checkSql);
