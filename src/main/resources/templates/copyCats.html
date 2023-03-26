@@ -114,22 +114,6 @@ input[type=submit]:hover {
 	color: white;
 }
 
-dropdown {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     margin: 0 auto;
-     height: 100vh;
-     background-color: #f1f1f1;
-   }
-
-submitButton {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     margin: 0 auto;
-   }
-
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
 	.col-25, .col-75, input[type=submit] {
@@ -141,86 +125,24 @@ submitButton {
 </head>
 <body>
 
-	<h2>Big Sponsors</h2>
+	<h2>Copy Cats</h2>
 	<div class="container">
-		<table th:if="${ not#lists.isEmpty(bigSponsors)}" class="custom">
-			<tr>
-				<th>Sponsor User Id</th>
-				<th>Sponser Name</th>
-			</tr>
-			<tr th:each="user : ${bigSponsors}">
-				<td th:text="${user.id}"></td>
-				<td th:text="${user.username}"></td>
-			</tr>
-		</table>
-	</div>
-
-	<h2>Big Contestants</h2>
-	<div class="container">
-		<table th:if="${ not#lists.isEmpty(bigContestants)}" class="custom">
+		<p th:if="${not#lists.isEmpty(copyCats)}">
+			Copy cats found for selected contestant.
+		</p>
+		<table th:if="${ not#lists.isEmpty(copyCats)}" class="custom">
 			<tr>
 				<th>Contestant User Id</th>
 				<th>Contestant Name</th>
 			</tr>
-			<tr th:each="user : ${bigContestants}">
+			<tr th:each="user : ${copyCats}">
 				<td th:text="${user.id}"></td>
 				<td th:text="${user.username}"></td>
 			</tr>
 		</table>
-	</div>
-
-	<h2>Common Contests</h2>
-	<div class="container">
-		<table th:if="${ not#lists.isEmpty(commonContests)}" class="custom">
-			<tr>
-				<th>Contest Id</th>
-				<th>Contest Name</th>
-			</tr>
-			<tr th:each="contest : ${commonContests}">
-				<td th:text="${contest.id}"></td>
-				<td th:text="${contest.name}"></td>
-			</tr>
-		</table>
-	</div>
-
-	<h2>Sleepy Contestants</h2>
-	<div class="container">
-		<table th:if="${ not#lists.isEmpty(sleepyContestants)}" class="custom">
-			<tr>
-				<th>Contestant User Id</th>
-				<th>Contestant Name</th>
-			</tr>
-			<tr th:each="user : ${sleepyContestants}">
-				<td th:text="${user.id}"></td>
-				<td th:text="${user.username}"></td>
-			</tr>
-		</table>
-	</div>
-
-	<h2>Tough Contests</h2>
-	<div class="container">
-		<table th:if="${ not#lists.isEmpty(toughContests)}" class="custom">
-			<tr>
-				<th>Contest Id</th>
-				<th>Contest Name</th>
-			</tr>
-			<tr th:each="contest : ${toughContests}">
-				<td th:text="${contest.id}"></td>
-				<td th:text="${contest.name}"></td>
-			</tr>
-		</table>
-	</div>
-
-	<h2>Find Copy Cats</h2>
-	<div class="container">
-		<form th:action="@{/copyCats}" method="post">
-			<label for="userId">Contestant</label>
-			<select class="dropdown" id="userId" name="userId">
-				<option value="0">Select Contestant</option>
-				<option th:each="contestant : ${contestants}" th:value="${contestant.id}" th:text="${contestant.username}"></option>
-			</select>
-			<input type="submit" value="Submit" class="submitButton"/>
-		</form>
+		<p th:if="${#lists.isEmpty(copyCats)}">
+			There are no copy cats for selected contestant.
+		</p>
 	</div>
 </body>
 

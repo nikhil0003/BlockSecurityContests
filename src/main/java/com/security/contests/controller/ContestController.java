@@ -131,14 +131,24 @@ public class ContestController {
 		List<User> sleepyContestants = customDAO.getSleepyContestants();
 		List<User> busyJudges = customDAO.getBusyJudges();
 		List<Contest> toughContests = customDAO.getToughContests();
+		List<User> contestants = customDAO.getContestants();
+
 		model.addAttribute("bigSponsors", bigSponsors);
 		model.addAttribute("bigContestants", bigContestants);
 		model.addAttribute("commonContests", commonContests);
 		model.addAttribute("sleepyContestants", sleepyContestants);
 		model.addAttribute("busyJudges", busyJudges);
 		model.addAttribute("toughContests", toughContests);
+		model.addAttribute("contestants", contestants);
 
 		return "dashboard";
+	}
+
+	@PostMapping("/copyCats")
+	public String findCopyCats(Model model, @ModelAttribute("userId") Long userId) {
+		List<User> copyCats = customDAO.getCopyCats(userId);
+		model.addAttribute("copyCats", copyCats);
+		return "copyCats";
 	}
 
 	@GetMapping("/contest/{id}")

@@ -43,6 +43,8 @@ public interface CustomDAO {
 
 	Contest findByContestId(Long Id);
 
+	List<User> getContestants();
+
 	List<User> getBigSponsers();
 
 	List<User> getBigContestants();
@@ -54,6 +56,12 @@ public interface CustomDAO {
 	List<User> getBusyJudges();
 
 	List<Contest> getToughContests();
+
+	List<User> getCopyCats(Long user_id);
+
+	User getUser(Long userId);
+
+	List<User> getUsers(List<Long> userIds);
 
 	ArrayList<Contestant> listContestantForContest(Contest contest);
 	

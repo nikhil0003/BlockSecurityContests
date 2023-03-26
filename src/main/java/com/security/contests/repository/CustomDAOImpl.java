@@ -19,8 +19,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Transactional
 @Component
@@ -270,6 +274,14 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	@Override
+	public List<User> getContestants() {
+		final String query = "select ur.user_id as contestant_user_id from user_role ur where ur.role_id = 3";
+		Query q = em.createNativeQuery(query, Long.class);
+		List<Long> list = q.getResultList();
+		return getUsers(list);
+	}
+
+	@Override
 	public List<User> getBigSponsers() {
 		final String bigSponsersQuery = "select sponser_contests.user_id from (\n" +
 				"SELECT user_id as user_id, count(distinct contest_id) as total_contests FROM sponser\n" +
@@ -283,19 +295,7 @@ public class CustomDAOImpl implements CustomDAO {
 		Query q = em.createNativeQuery(bigSponsersQuery, Long.class);
 		List<Long> list = q.getResultList();
 
-		final String sql = "select * from user where id in (?)";
-		Query query = em.createNativeQuery(sql);
-		query.setParameter(1, list);
-		List<Object> objList = query.getResultList();
-		List<User> users = new ArrayList<>();
-		for (Object iter : objList) {
-			Object[] ob = (Object[]) iter;
-			User user = new User();
-			user.setId((Long) ob[0]);
-			user.setUsername((String) ob[5]);
-			users.add(user);
-		}
-		return users;
+		return getUsers(list);
 	}
 
 	@Override
@@ -305,19 +305,7 @@ public class CustomDAOImpl implements CustomDAO {
 				") and w.user_id in (select ur1.user_id as contestant_user_id from user_role ur1 where ur1.role_id = 3);";
 		Query q = em.createNativeQuery(bigContestantsQuery, Long.class);
 		List<Long> list = q.getResultList();
-		final String sql = "select * from user where id in (?)";
-		Query query = em.createNativeQuery(sql);
-		query.setParameter(1, list);
-		List<Object> objList = query.getResultList();
-		List<User> users = new ArrayList<>();
-		for (Object iter : objList) {
-			Object[] ob = (Object[]) iter;
-			User user = new User();
-			user.setId((Long) ob[0]);
-			user.setUsername((String) ob[5]);
-			users.add(user);
-		}
-		return users;
+		return getUsers(list);
 	}
 
 	@Override
@@ -351,19 +339,7 @@ public class CustomDAOImpl implements CustomDAO {
 				"and u.id not in (SELECT user_id FROM contestant);";
 		Query q = em.createNativeQuery(sleepyContestantsQuery, Long.class);
 		List<Long> list = q.getResultList();
-		final String sql = "select * from user where id in (?)";
-		Query query = em.createNativeQuery(sql);
-		query.setParameter(1, list);
-		List<Object> objList = query.getResultList();
-		List<User> users = new ArrayList<>();
-		for (Object iter : objList) {
-			Object[] ob = (Object[]) iter;
-			User user = new User();
-			user.setId((Long) ob[0]);
-			user.setUsername((String) ob[5]);
-			users.add(user);
-		}
-		return users;
+		return getUsers(list);
 	}
 
 	@Override
@@ -371,19 +347,7 @@ public class CustomDAOImpl implements CustomDAO {
 		final String busyJudgesQuery = "select user_id from judge group by user_id order by count(*) desc;";
 		Query q = em.createNativeQuery(busyJudgesQuery, Long.class);
 		List<Long> list = q.getResultList();
-		final String sql = "select * from user where id in (?)";
-		Query query = em.createNativeQuery(sql);
-		query.setParameter(1, list);
-		List<Object> objList = query.getResultList();
-		List<User> users = new ArrayList<>();
-		for (Object iter : objList) {
-			Object[] ob = (Object[]) iter;
-			User user = new User();
-			user.setId((Long) ob[0]);
-			user.setUsername((String) ob[5]);
-			users.add(user);
-		}
-		return users;
+		return getUsers(list);
 	}
 
 	@Override
@@ -404,6 +368,56 @@ public class CustomDAOImpl implements CustomDAO {
 			contests.add(contest);
 		}
 		return contests;
+	}
+
+
+	@Override
+	public List<User> getCopyCats(final Long user_id) {
+		final String sql = "select user_id, contest_id from contestant where user_id in (\n" +
+				"select user_id from contestant where contest_id in " +
+				"(select contest_id from contestant where user_id = ?))";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, user_id);
+		List<Object> objList = query.getResultList();
+		if (!objList.isEmpty()) {
+			Map<Long, List<Long>> map = new HashMap<>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				map.computeIfAbsent(((Long)ob[0]), k -> new ArrayList<>()).add((Long)ob[1]);
+			}
+			List<Long> contestsOfUser = map.get(user_id);
+			List<Long> copyCats = map.entrySet().stream()
+					.filter(e -> e.getKey() != user_id
+							&& e.getValue().size() == contestsOfUser.size()
+							&& contestsOfUser.containsAll(e.getValue()))
+					.map(e -> e.getKey())
+					.collect(Collectors.toList());
+
+			return getUsers(copyCats);
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public User getUser(final Long userId) {
+		return getUsers(List.of(userId)).stream().findFirst().orElse(null);
+	}
+
+	@Override
+	public List<User> getUsers(final List<Long> userIds) {
+		final String sql = "select * from user where id in (?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, userIds);
+		List<Object> objList = query.getResultList();
+		List<User> users = new ArrayList<>();
+		for (Object iter : objList) {
+			Object[] ob = (Object[]) iter;
+			User user = new User();
+			user.setId((Long) ob[0]);
+			user.setUsername((String) ob[5]);
+			users.add(user);
+		}
+		return users;
 	}
 
 	public ArrayList<Contestant> listContestantForContest(Contest contest) {
