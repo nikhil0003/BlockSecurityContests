@@ -265,6 +265,7 @@ public class CustomDAOImpl implements CustomDAO {
 				jd.setEndDate((Date) ob[1]);
 				jd.setStartDate((Date) ob[3]);
 				jd.setSponserAmount((Long) ob[4]);
+				jd.setClosed((String) ob[5]);
 				return jd;
 			} else {
 				return null;
@@ -629,11 +630,20 @@ public class CustomDAOImpl implements CustomDAO {
 				grade.setUserId((Long)ob[2]);
 				grade.setContestId((Long)ob[3]);
 				grade.setJudgeId((Long)ob[4]);
-				grade.setGradeValue((Long)ob[4]);
+				grade.setGradeValue((Long)ob[5]);
 				list.add(grade);
 			}
 			return list;
 		}
 		return null;
+	}
+	
+
+	@Override
+	public int closeContest(Long contestId) {
+		final String sql = "UPDATE contest SET closed = 'false' WHERE id = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, contestId);
+		return query.executeUpdate();
 	}
 }

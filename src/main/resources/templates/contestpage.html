@@ -197,7 +197,9 @@ button[type="submit"] {
 		</div>
 
 	</div>
-	
+	<form th:if="${isSponser}" th:object="${contest}"  th:action="@{'/close/' + ${contest.id}}" method="get">
+		<button type="submit" class="submit">Close Contest</button>
+	</form>
    <form th:if="${isSponser}" th:object="${contest}"  th:action="@{'/distributeRewards/' + ${contest.id}}" method="get">
 		<button type="submit" class="submit">Distribute Rewards</button>
 	</form>

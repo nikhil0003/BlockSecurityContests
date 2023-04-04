@@ -30,6 +30,9 @@ public class Contest {
 
 	private Long sponserAmount;
 	
+	@Column(name="closed", nullable = true)
+	private String closed;
+	
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contest")
 	private List<Judge> JudgeList;
@@ -160,4 +163,22 @@ public class Contest {
 	public void setSponserAmount(Long sponserAmount) {
 		this.sponserAmount = sponserAmount;
 	}
+
+
+	/**
+	 * @return the closed
+	 */
+	public String getClosed() {
+		return closed;
+	}
+
+
+	/**
+	 * @param closed the closed to set
+	 */
+	public void setClosed(String closed) {
+		this.closed = closed;
+	}
+	
+	
 }

@@ -84,5 +84,7 @@ public interface CustomDAO {
     ArrayList<Judge> findJudgesBycontestId(Long id, Contest contest);
     
     ArrayList<Grade> findGradesBycontestId(Long id, Contest contest);
+    
+	public int closeContest(Long contestId);
 
 }

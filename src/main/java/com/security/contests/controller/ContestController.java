@@ -296,11 +296,18 @@ public class ContestController {
 		}
 		return "redirect:/contestList";
 	}
+	@GetMapping(value = "/close/{id}")
+	public String closeContest(HttpServletRequest request, Model model, @PathVariable Long id) {
+		Contest contest = customDAO.findByContestId(id);
+		customDAO.closeContest(id);
+		return "redirect:/contestList";
+		}
 
 	@GetMapping(value = "/distributeRewards/{id}")
 	public String distributeRewards(HttpServletRequest request, Model model, @PathVariable Long id) {
 		Contest contest = customDAO.findByContestId(id);
-		if (contest.getSponserAmount() != null && contest.getEndDate().compareTo(new Date())<0) {
+		if (contest.getSponserAmount() != null
+				&& (contest.getEndDate().compareTo(new Date()) < 0 || contest.getClosed() != null)) {
 			ArrayList<Contestant> participentsListDb = customDAO.listContestantForContest(contest);
 			List<Judge> judges = customDAO.findJudgesBycontestId(id, contest);
 			if (judges != null && !judges.isEmpty()) {
@@ -337,44 +344,5 @@ public class ContestController {
 		}
 		return "redirect:/contestList";
 	}
-
-//	@GetMapping(value = "/distributeRewards")
-//	public String distributeRewards(@ModelAttribute("contest") Contest contest, HttpServletRequest request,
-//			Model model) {
-//		final Long sponserAmount = contest.getSponserAmount();
-//		List<Judge> judges = contest.getJudgeList();
-//		List<Contestant> contestants = contest.getContestant();
-//		final Long totalRewardForJudges = (JUDGE_TOTAL_SHARE_PERCENTAGE * sponserAmount) / 100;
-//		final Long rewardPerJudge = totalRewardForJudges / judges.size();
-//		final Long totalRewardForContestants = sponserAmount - totalRewardForJudges;
-//		final Long rewardForWinner = (70 * totalRewardForContestants) / 100;
-//		final Long rewardForRunner = totalRewardForContestants - rewardForWinner;
-//
-//		judges.stream().forEach(judge -> {
-//			customDAO.updateWalletData(judge.getUser().getId(), rewardPerJudge);
-//			Wallet wallet = customDAO.findWalletByUserId(judge.getUser().getId());
-//			customDAO.saveLedgerData(wallet.getId(), rewardPerJudge, "Contest Fee");
-//		});
-//		Collections.sort(contestants, Comparator.comparing(Contestant::getGrade));
-//		Collections.sort(contestants, Collections.reverseOrder());
-//		Contestant winner = contestants.get(0);
-//		Contestant runner = contestants.get(1);
-//
-//		Wallet wallet1 = customDAO.findWalletByUserId(winner.getUser().getId());
-//		customDAO.updateWalletData(winner.getUser().getId(), wallet1.getBalance() + rewardForWinner);
-//		customDAO.saveLedgerData(wallet1.getId(), rewardForWinner, "Contest Winner");
-//
-//		Wallet wallet2 = customDAO.findWalletByUserId(runner.getUser().getId());
-//		customDAO.updateWalletData(runner.getUser().getId(), wallet2.getBalance() + rewardForRunner);
-//		customDAO.saveLedgerData(wallet2.getId(), rewardForRunner, "Contest Runner");
-//
-//		Sponser sponser = contest.getSponser();
-//		Wallet wallet3 = customDAO.findWalletByUserId(sponser.getUser().getId());
-//		final Long balanceAfterDistribution = wallet3.getBalance() - sponserAmount;
-//		customDAO.updateWalletData(sponser.getUser().getId(), balanceAfterDistribution);
-//		customDAO.saveLedgerData(wallet1.getId(), -sponserAmount, "Contest Sponsership amount");
-//
-//		return "contestList";
-//	}
 
 }
