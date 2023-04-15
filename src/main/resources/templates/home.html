@@ -201,6 +201,9 @@ a:hover {
 		<div class="subtitle">
 			Available Balance : <span th:text="${walletBalance}">Root </span>
 		</div>
+		<a th:if="${roleName == 'sponser'}" th:href="@{/sponserProfile}">
+			<button type="submit">Profile Page</button>
+		</a>
 		<a th:if="${isSponser}" th:href="@{/createContest}">
 			<button type="submit">createContest</button>
 		</a>

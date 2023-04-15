@@ -41,6 +41,8 @@ public interface CustomDAO {
 
 	ArrayList<Contest> listContests();
 
+	ArrayList<Contest> listContestsBySponser(Long sponserUserId);
+
 	Contest findByContestId(Long Id);
 
 	List<User> getContestants();

@@ -248,6 +248,32 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	@Override
+	public ArrayList<Contest> listContestsBySponser(final Long sponserUserId) {
+		final String checkSql = "select count(*) from sponser s inner join contest c on c.id = s.contest_id where s.user_id = ?";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, sponserUserId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select c.* from sponser s inner join contest c on c.id = s.contest_id where s.user_id = ? order by c.start_date desc";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, sponserUserId);
+			List<Object> objList = query.getResultList();
+			ArrayList<Contest> list = new ArrayList<Contest>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				Contest jd = new Contest();
+				jd.setId((Long) ob[0]);
+				jd.setName((String) ob[2]);
+				jd.setEndDate((Date) ob[1]);
+				jd.setStartDate((Date) ob[3]);
+				list.add(jd);
+			}
+			return list;
+		}
+		return null;
+	}
+
+	@Override
 	public Contest findByContestId(Long Id) {
 		final String checkSql = "select count(*) from contest where id = (?)";
 		Query checkquery = em.createNativeQuery(checkSql);
@@ -599,8 +625,8 @@ public class CustomDAOImpl implements CustomDAO {
 				Object[] ob = (Object[]) iter;
 				Judge jd = new Judge();
 				jd.setId((Long) ob[0]);
-				User user = new User();
-				user.setId((Long) ob[7]);
+				User user = getUser((Long) ob[8]);
+				//user.setId((Long) ob[7]);
 				jd.setContest(contest);
 				jd.setUser(user);
 				list.add(jd);

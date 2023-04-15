@@ -4,6 +4,8 @@ public class JudgeGradeDispaly {
 
 	public Long judgeId;
 
+	public String judgeName;
+
 	public Long contestantId;
 
 	public String dataArea;
@@ -24,6 +26,14 @@ public class JudgeGradeDispaly {
 	 */
 	public void setJudgeId(Long judgeId) {
 		this.judgeId = judgeId;
+	}
+
+	public String getJudgeName() {
+		return judgeName;
+	}
+
+	public void setJudgeName(String judgeName) {
+		this.judgeName = judgeName;
 	}
 
 	/**

@@ -54,9 +54,11 @@ public class ContestController {
 			model.addAttribute("isAdmin", true);
 		}
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
-				&& user.getUserRoles().getRole().getName() != null
-				&& user.getUserRoles().getRole().getName().equals("sponser")) {
-			model.addAttribute("isSponser", true);
+				&& user.getUserRoles().getRole().getName() != null) {
+			if(user.getUserRoles().getRole().getName().equals("sponser")) {
+				model.addAttribute("isSponser", true);
+			}
+			model.addAttribute("roleName", user.getUserRoles().getRole().getName());
 		}
 		Wallet wallet = customDAO.findWalletByUserId(user.getId());
 		model.addAttribute("walletBalance", wallet.getBalance());
@@ -225,6 +227,18 @@ public class ContestController {
 		model.addAttribute("haveTojoin", haveTojoin);
 		model.addAttribute("joinedConstanst", joinedConstanst);
 		model.addAttribute("contest", contest);
+
+		List<Judge> judges = customDAO.findJudgesBycontestId(id, contestData);
+		List<JudgeGradeDispaly> displayJudges = new ArrayList<>();
+		judges.forEach(judge -> {
+			JudgeGradeDispaly judgeGradeDispaly = new JudgeGradeDispaly();
+			judgeGradeDispaly.setJudgeId(judge.getUser().getId());
+			judgeGradeDispaly.setJudgeName(judge.getUser().getUsername());
+			displayJudges.add(judgeGradeDispaly);
+		});
+		model.addAttribute("displayJudges", displayJudges);
+
+
 		return "contestpage";
 
 	}
@@ -343,6 +357,26 @@ public class ContestController {
 			});
 		}
 		return "redirect:/contestList";
+	}
+
+	@GetMapping("/sponserProfile")
+	public String sponserProfile(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& user.getUserRoles().getRole().getName().equals("admin")) {
+			model.addAttribute("isAdmin", true);
+		}
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& user.getUserRoles().getRole().getName().equals("sponser")) {
+			model.addAttribute("isSponser", true);
+		}
+		Wallet wallet = customDAO.findWalletByUserId(user.getId());
+		model.addAttribute("walletBalance", wallet.getBalance());
+		model.addAttribute("username", user.getUsername());
+		ArrayList<Contest> contestList = customDAO.listContestsBySponser(user.getId());
+		model.addAttribute("contestList", contestList);
+		return "sponsorProfilePage";
 	}
 
 }

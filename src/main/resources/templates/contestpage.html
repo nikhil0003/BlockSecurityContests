@@ -195,6 +195,27 @@ button[type="submit"] {
 				</tr>
 			</table>
 		</div>
+		<br>
+		<h3>Judges</h3>
+		<div class="row">
+			<table th:if="${ not#lists.isEmpty(displayJudges)}" id="judge">
+				<tr>
+					<th>Judge Id</th>
+					<th>Judge Name</th>
+				</tr>
+				<tr th:each="pl, itemStat : *{displayJudges}">
+					<td
+							th:field="*{displayJudges[__${itemStat.index}__].judgeId}"
+							th:text="*{displayJudges[__${itemStat.index}__].judgeId}"
+							<!--th:onclick="|window.location.href='/gradeSubmission/${displayJudges[__${itemStat.index}__].contestantId}/${displayJudges[__${itemStat.index}__].contestId}'|"-->
+					></td>
+					<td th:field="*{displayJudges[__${itemStat.index}__].judgeName}"
+						th:text="*{displayJudges[__${itemStat.index}__].judgeName}"
+						<!--th:onclick="|window.location.href='/gradeSubmission/${displayJudges[__${itemStat.index}__].contestantId}/${displayJudges[__${itemStat.index}__].contestId}'|"-->
+					></td>
+				</tr>
+			</table>
+		</div>
 
 	</div>
 	<form th:if="${isSponser}" th:object="${contest}"  th:action="@{'/close/' + ${contest.id}}" method="get">
