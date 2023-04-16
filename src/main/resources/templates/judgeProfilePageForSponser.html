@@ -3,7 +3,7 @@
 	xmlns:th="https://www.thymeleaf.org">
 
 <head>
-<title>Sponsor Profile</title>
+<title>Judge Profile</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- Meta, title, CSS, favicons, etc. -->
 <meta charset="utf-8">
@@ -127,60 +127,28 @@ input[type=submit]:hover {
 
 
 <div class="container">
-	<div th:switch="${userRoleName}">
-		<div th:case="'sponser'">
-			<h2>Sponsor Profile</h2>
-			<div class="container">
-				<div class="subtitle">
-					Wallet address : <span th:text="${username}">Root </span>
-				</div>
-				<div class="subtitle">
-					Available Balance : <span th:text="${walletBalance}">Root </span>
-				</div>
-				<table th:if="${ not#lists.isEmpty(contestList)}" id="judge">
-					<tr>
-						<th>Name</th>
-						<th>Start Date</th>
-						<th>End Date</th>
-					</tr>
-					<tr th:each="contest : ${contestList}">
-						<td th:text="${contest.name}"
-							th:onclick="|window.location.href='/contest/${contest.id}'|"></td>
-						<td th:text="${contest.startDate}"
-							th:onclick="|window.location.href='/contest/${contest.id}'|">
-						</td>
-						<td th:text="${contest.endDate}"
-							th:onclick="|window.location.href='/contest/${contest.id}'|"></td>
-					</tr>
-				</table>
-			</div>
+	<h2>Judge Profile</h2>
+	<div class="container">
+		<div class="subtitle">
+			Wallet address : <span th:text="${username}">Root </span>
 		</div>
-		<div th:case="'judge'">
-			<h2>Judge Profile</h2>
-			<div class="container">
-				<div class="subtitle">
-					Wallet address : <span th:text="${username}">Root </span>
-				</div>
-				<div class="subtitle">
-					Available Balance : <span th:text="${walletBalance}">Root </span>
-				</div>
-				<table th:if="${ not#lists.isEmpty(judgeReviewList)}" id="judge">
-					<tr>
-						<th>Sponser</th>
-						<th>Review</th>
-					</tr>
-					<tr th:each="judgeReview : ${judgeReviewList}">
-						<td th:text="${judgeReview.sponserUserId}"></td>
-						<td th:text="${judgeReview.review}"></td>
-					</tr>
-				</table>
-			</div>
+		<div class="subtitle">
+			Available Balance : <span th:text="${walletBalance}">Root </span>
 		</div>
-		<div th:case="*">
-			<p>Unknown user role</p>
-		</div>
+		<table th:if="${ not#lists.isEmpty(judgeReviewList)}" id="judge">
+			<tr>
+				<th>Sponser</th>
+				<th>Review</th>
+			</tr>
+			<tr th:each="judgeReview : ${judgeReviewList}">
+				<td th:text="${judgeReview.sponserUserId}"></td>
+				<td th:text="${judgeReview.review}"></td>
+			</tr>
+		</table>
+		<a th:href="@{'/reviewSubmission/' + ${judgeUserId}}">
+			<button type="submit">Submit/Edit review of Judge</button>
+		</a>
 	</div>
-
 
 </div>
 	<form th:action="@{/logout}" method="post">

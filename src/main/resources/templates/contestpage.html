@@ -207,11 +207,11 @@ button[type="submit"] {
 					<td
 							th:field="*{displayJudges[__${itemStat.index}__].judgeId}"
 							th:text="*{displayJudges[__${itemStat.index}__].judgeId}"
-							<!--th:onclick="|window.location.href='/gradeSubmission/${displayJudges[__${itemStat.index}__].contestantId}/${displayJudges[__${itemStat.index}__].contestId}'|"-->
+							th:onclick="|window.location.href='/profile/${displayJudges[__${itemStat.index}__].judgeId}'|"
 					></td>
 					<td th:field="*{displayJudges[__${itemStat.index}__].judgeName}"
 						th:text="*{displayJudges[__${itemStat.index}__].judgeName}"
-						<!--th:onclick="|window.location.href='/gradeSubmission/${displayJudges[__${itemStat.index}__].contestantId}/${displayJudges[__${itemStat.index}__].contestId}'|"-->
+						th:onclick="|window.location.href='/profile/${displayJudges[__${itemStat.index}__].judgeId}'|"
 					></td>
 				</tr>
 			</table>

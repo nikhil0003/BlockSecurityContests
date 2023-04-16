@@ -89,4 +89,13 @@ public interface CustomDAO {
     
 	public int closeContest(Long contestId);
 
+	int saveJudgeReview(JudgeReview judgeReview);
+
+	int updateJudgeReview(String review);
+
+	JudgeReview findByJudgeReviewByJudgeIdAndSponserId(Long judgeId, Long sponserId);
+
+	Sponser findBySponserByUserId(Long userId);
+
+	ArrayList<JudgeReview> listJudgeReviewsByJudge(Long judgerUserId);
 }

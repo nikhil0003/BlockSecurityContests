@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.security.contests.domain.JudgeReview;
+import com.security.contests.domain.Sponser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -359,9 +361,16 @@ public class ContestController {
 		return "redirect:/contestList";
 	}
 
-	@GetMapping("/sponserProfile")
-	public String sponserProfile(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
+	@GetMapping("/profile")
+	public String getProfile(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
+		String roleName = "";
 		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null) {
+			roleName = user.getUserRoles().getRole().getName();
+			model.addAttribute("userRoleName", roleName);
+		}
+
+		/*if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
 				&& user.getUserRoles().getRole().getName() != null
 				&& user.getUserRoles().getRole().getName().equals("admin")) {
 			model.addAttribute("isAdmin", true);
@@ -370,13 +379,75 @@ public class ContestController {
 				&& user.getUserRoles().getRole().getName() != null
 				&& user.getUserRoles().getRole().getName().equals("sponser")) {
 			model.addAttribute("isSponser", true);
-		}
+		}*/
 		Wallet wallet = customDAO.findWalletByUserId(user.getId());
 		model.addAttribute("walletBalance", wallet.getBalance());
 		model.addAttribute("username", user.getUsername());
-		ArrayList<Contest> contestList = customDAO.listContestsBySponser(user.getId());
-		model.addAttribute("contestList", contestList);
+		switch (roleName) {
+			case "sponser" :
+				ArrayList<Contest> contestList = customDAO.listContestsBySponser(user.getId());
+				model.addAttribute("contestList", contestList);
+				break;
+			case "judge" :
+				//get reviews
+				ArrayList<JudgeReview> judgeReviewList = customDAO.listJudgeReviewsByJudge(user.getId());
+				model.addAttribute("judgeReviewList", judgeReviewList);
+				break;
+		}
+
 		return "sponsorProfilePage";
 	}
 
+	@GetMapping("/profile/{judgeUserId}")
+	public String judgeProfile(@PathVariable("judgeUserId") Long judgeUserId, HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
+		String roleName = "";
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null) {
+			roleName = user.getUserRoles().getRole().getName();
+			model.addAttribute("userRoleName", roleName);
+		}
+		final User judgeUser = customDAO.getUser(judgeUserId);
+		Wallet wallet = customDAO.findWalletByUserId(judgeUser.getId());
+		model.addAttribute("walletBalance", wallet.getBalance());
+		model.addAttribute("username", judgeUser.getUsername());
+
+		ArrayList<JudgeReview> judgeReviewList = customDAO.listJudgeReviewsByJudge(judgeUser.getId());
+		model.addAttribute("judgeReviewList", judgeReviewList);
+
+		return "judgeProfilePageForSponser";
+	}
+
+
+	@GetMapping("/reviewSubmission/{judgeUserId}")
+	public String reviewJudge(@PathVariable("judgeUserId") Long judgeUserId, @AuthenticationPrincipal User user,
+									  Model model) {
+		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
+				&& user.getUserRoles().getRole().getName() != null
+				&& (user.getUserRoles().getRole().getName().equals("sponser"))) {
+			JudgeReview existingJudgeReview = customDAO.findByJudgeReviewByJudgeIdAndSponserId(judgeUserId, user.getId());
+			JudgeReview judgeReview = new JudgeReview();
+			judgeReview.setJudgeUserId(judgeUserId);
+			judgeReview.setSponserUserId(user.getId());
+			model.addAttribute("judgeReview", existingJudgeReview != null
+					? existingJudgeReview
+					: judgeReview);
+			model.addAttribute("judgeUserId", judgeUserId);
+
+			return "reviewSubmission";
+
+		} else
+			return "redirect:/contestList";
+
+	}
+
+	@PostMapping("/submitReview")
+	public String submitReview(@ModelAttribute("judgeReview") JudgeReview judgeReview, @AuthenticationPrincipal User user, Model model) {
+		JudgeReview existingJudgeReview = customDAO.findByJudgeReviewByJudgeIdAndSponserId(judgeReview.getJudgeUserId(), judgeReview.getSponserUserId());
+		if (existingJudgeReview != null) {
+			customDAO.updateJudgeReview(judgeReview.getReview());
+		} else {
+			customDAO.saveJudgeReview(judgeReview);
+		}
+		return "redirect:/contestList";
+	}
 }

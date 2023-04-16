@@ -121,3 +121,14 @@ CREATE TABLE `grade` (
   CONSTRAINT `grade_ibfk_4` FOREIGN KEY (`judge_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `judge_review` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `judge_user_id` bigint DEFAULT NULL,
+  `sponser_user_id` bigint DEFAULT NULL,
+  `review` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `judge_user_id` (`judge_user_id`),
+  KEY `sponser_user_id` (`sponser_user_id`),
+  CONSTRAINT `judge_review_ibfk_1` FOREIGN KEY (`judge_user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `judge_review_ibfk_2` FOREIGN KEY (`sponser_user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

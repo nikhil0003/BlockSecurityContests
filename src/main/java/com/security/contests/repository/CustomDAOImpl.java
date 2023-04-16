@@ -7,7 +7,9 @@ import com.security.contests.domain.Grade;
 import com.security.contests.domain.Judge;
 import com.security.contests.domain.JudgeDisplay;
 import com.security.contests.domain.JudgeGradeDispaly;
+import com.security.contests.domain.JudgeReview;
 import com.security.contests.domain.Role;
+import com.security.contests.domain.Sponser;
 import com.security.contests.domain.User;
 import com.security.contests.domain.UserRole;
 import com.security.contests.domain.Wallet;
@@ -671,5 +673,98 @@ public class CustomDAOImpl implements CustomDAO {
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, contestId);
 		return query.executeUpdate();
+	}
+
+	@Override
+	public int saveJudgeReview(JudgeReview judgeReview) {
+		final String sql = "INSERT INTO judge_review(judge_user_id,sponser_user_id,review) values(?,?,?)";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, judgeReview.getJudgeUserId());
+		query.setParameter(2, judgeReview.getSponserUserId());
+		query.setParameter(3, judgeReview.getReview());
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int updateJudgeReview(final String review) {
+		final String sql = "UPDATE judge_review SET review = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, review);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public JudgeReview findByJudgeReviewByJudgeIdAndSponserId(Long judgeUserId, Long sponserUserId) {
+		final String checkSql = "select count(*) from judge_review where judge_user_id = ? and sponser_user_id = ?";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, judgeUserId);
+		checkquery.setParameter(2, sponserUserId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from judge_review where judge_user_id = ? and sponser_user_id = ?";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, judgeUserId);
+			query.setParameter(2, sponserUserId);
+			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+			JudgeReview jr = new JudgeReview();
+			if (ob != null) {
+				jr.setId((Long) ob[0]);
+				jr.setJudgeUserId((Long) ob[1]);
+				jr.setSponserUserId((Long) ob[2]);
+				jr.setReview((String) ob[3]);
+				return jr;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Sponser findBySponserByUserId(Long userId) {
+		final String checkSql = "select count(*) from sponser where user_id = ?";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, userId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from sponser where user_id = ?";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, userId);
+			Object[] ob = query.getSingleResult() != null ? (Object[]) query.getSingleResult() : null;
+			Sponser sponser = new Sponser();
+			if (ob != null) {
+				sponser.setId((Long) ob[0]);
+				return sponser;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public ArrayList<JudgeReview> listJudgeReviewsByJudge(final Long judgeUserId) {
+		final String checkSql = "select count(*) from judge_review where judge_user_id = ?";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, judgeUserId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from judge_review where judge_user_id = ?";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, judgeUserId);
+			List<Object> objList = query.getResultList();
+			ArrayList<JudgeReview> list = new ArrayList<>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				JudgeReview jd = new JudgeReview();
+				jd.setId((Long) ob[0]);
+				jd.setJudgeUserId((Long) ob[1]);
+				jd.setSponserUserId((Long) ob[2]);
+				jd.setReview((String) ob[3]);
+				list.add(jd);
+			}
+			return list;
+		}
+		return null;
 	}
 }
