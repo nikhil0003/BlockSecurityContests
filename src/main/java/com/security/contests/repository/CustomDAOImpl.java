@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -695,7 +696,7 @@ public class CustomDAOImpl implements CustomDAO {
 
 	@Override
 	public int closeContest(Long contestId) {
-		final String sql = "UPDATE contest SET closed = 'false' WHERE id = ?";
+		final String sql = "UPDATE contest SET closed = 'true' WHERE id = ?";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, contestId);
 		return query.executeUpdate();
@@ -813,5 +814,57 @@ public class CustomDAOImpl implements CustomDAO {
 		Query q = em.createNativeQuery(topJudgesQuery, Long.class);
 		List<Long> list = q.getResultList();
 		return getUsers(list);
+	}
+
+	@Override
+	public Long getTotalNumberOfSponsersForPastContests() {
+		final String checkSql = "select count(*) from sponser s inner join contest c on c.id = s.contest_id where c.closed = 'true'";
+		Query checkquery = em.createNativeQuery(checkSql);
+		return (Long) checkquery.getSingleResult();
+	}
+
+	@Override
+	public Long getTotalNumberOfJudgesForPastContests() {
+		final String checkSql = "select count(*) from judge j inner join contest c on c.id = j.contest_id where c.closed = 'true'";
+		Query checkquery = em.createNativeQuery(checkSql);
+		return (Long) checkquery.getSingleResult();
+	}
+
+	@Override
+	public Long getTotalNumberOfContestantsForPastContests() {
+		final String checkSql = "select count(*) from contestant ct inner join contest c on c.id = ct.contest_id where c.closed = 'true'";
+		Query checkquery = em.createNativeQuery(checkSql);
+		return (Long) checkquery.getSingleResult();
+	}
+
+	@Override
+	public Long getTotalNumberOfPastContests() {
+		final String checkSql = "select count(*) from contest c where c.closed = 'true'";
+		Query checkquery = em.createNativeQuery(checkSql);
+		return (Long) checkquery.getSingleResult();
+	}
+
+	@Override
+	public BigDecimal getTotalSponserAmount() {
+		final String sql = "select sum(sponserAmount) from contest c where c.closed = 'true'";
+		Query query = em.createNativeQuery(sql);
+		BigDecimal value = (BigDecimal) query.getSingleResult();
+		return value != null ? value : BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getTotalRewardForJudges() {
+		final String sql = "select sum(w.balance) from user_role ur inner join wallet w on w.user_id = ur.user_id where ur.role_id = 2";
+		Query query = em.createNativeQuery(sql);
+		BigDecimal value = (BigDecimal) query.getSingleResult();
+		return value != null ? value : BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getTotalRewardForContestants() {
+		final String sql = "select sum(w.balance) from user_role ur inner join wallet w on w.user_id = ur.user_id where ur.role_id = 3";
+		Query query = em.createNativeQuery(sql);
+		BigDecimal value = (BigDecimal) query.getSingleResult();
+		return value != null ? value : BigDecimal.ZERO;
 	}
 }

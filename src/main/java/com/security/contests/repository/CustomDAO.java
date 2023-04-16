@@ -1,5 +1,6 @@
 package com.security.contests.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,4 +105,18 @@ public interface CustomDAO {
 	List<User> getContestantsSortedDescByRewardBalance();
 
 	List<User> getTopJudges();
+
+	Long getTotalNumberOfSponsersForPastContests();
+
+	Long getTotalNumberOfJudgesForPastContests();
+
+	Long getTotalNumberOfContestantsForPastContests();
+
+	Long getTotalNumberOfPastContests();
+
+	BigDecimal getTotalSponserAmount();
+
+	BigDecimal getTotalRewardForJudges();
+
+	BigDecimal getTotalRewardForContestants();
 }

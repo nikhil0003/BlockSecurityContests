@@ -236,6 +236,31 @@ submitButton {
 			<input type="submit" value="Submit" class="submitButton"/>
 		</form>
 	</div>
+
+	<h2>Statistics for Past contests</h2>
+	<div class="container">
+		<div class="subtitle">
+			Total Number Of Sponsers : <span th:text="${totalNumberOfSponsersForPastContests}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Number Of Judges : <span th:text="${totalNumberOfJudgesForPastContests}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Number Of Contestants : <span th:text="${totalNumberOfContestantsForPastContests}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Number Of Past Contests : <span th:text="${totalNumberOfPastContests}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Sponser Amount : <span th:text="${totalSponserAmount}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Reward For Judges: <span th:text="${totalRewardForJudges}">Root </span>
+		</div>
+		<div class="subtitle">
+			Total Reward For Contestants : <span th:text="${totalRewardForContestants}">Root </span>
+		</div>
+	</div>
 </body>
 
 </html>

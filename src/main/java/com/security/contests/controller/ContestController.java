@@ -1,5 +1,6 @@
 package com.security.contests.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -138,6 +139,14 @@ public class ContestController {
 		List<Contest> toughContests = customDAO.getToughContests();
 		List<User> contestants = customDAO.getContestants();
 
+		final Long totalNumberOfSponsersForPastContests = customDAO.getTotalNumberOfSponsersForPastContests();
+		final Long totalNumberOfJudgesForPastContests = customDAO.getTotalNumberOfJudgesForPastContests();
+		final Long totalNumberOfContestantsForPastContests = customDAO.getTotalNumberOfContestantsForPastContests();
+		final Long totalNumberOfPastContests = customDAO.getTotalNumberOfPastContests();
+		final BigDecimal totalSponserAmount = customDAO.getTotalSponserAmount();
+		final BigDecimal totalRewardForJudges = customDAO.getTotalRewardForJudges();
+		final BigDecimal totalRewardForContestants = customDAO.getTotalRewardForContestants();
+
 		model.addAttribute("bigSponsors", bigSponsors);
 		model.addAttribute("topJudges", topJudges);
 		model.addAttribute("bigContestants", bigContestants);
@@ -146,6 +155,13 @@ public class ContestController {
 		model.addAttribute("busyJudges", busyJudges);
 		model.addAttribute("toughContests", toughContests);
 		model.addAttribute("contestants", contestants);
+		model.addAttribute("totalNumberOfSponsersForPastContests", totalNumberOfSponsersForPastContests);
+		model.addAttribute("totalNumberOfJudgesForPastContests", totalNumberOfJudgesForPastContests);
+		model.addAttribute("totalNumberOfContestantsForPastContests", totalNumberOfContestantsForPastContests);
+		model.addAttribute("totalNumberOfPastContests", totalNumberOfPastContests);
+		model.addAttribute("totalSponserAmount", totalSponserAmount);
+		model.addAttribute("totalRewardForJudges", totalRewardForJudges);
+		model.addAttribute("totalRewardForContestants", totalRewardForContestants);
 
 		return "dashboard";
 	}
