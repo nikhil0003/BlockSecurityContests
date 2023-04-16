@@ -330,12 +330,13 @@ public class ContestController {
 		}
 		return "redirect:/contestList";
 	}
+
 	@GetMapping(value = "/close/{id}")
 	public String closeContest(HttpServletRequest request, Model model, @PathVariable Long id) {
 		Contest contest = customDAO.findByContestId(id);
 		customDAO.closeContest(id);
 		return "redirect:/contestList";
-		}
+	}
 
 	@GetMapping(value = "/distributeRewards/{id}")
 	public String distributeRewards(HttpServletRequest request, Model model, @PathVariable Long id) {
@@ -388,16 +389,6 @@ public class ContestController {
 			model.addAttribute("userRoleName", roleName);
 		}
 
-		/*if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
-				&& user.getUserRoles().getRole().getName() != null
-				&& user.getUserRoles().getRole().getName().equals("admin")) {
-			model.addAttribute("isAdmin", true);
-		}
-		if (user.getUserRoles() != null && user.getUserRoles().getRole() != null
-				&& user.getUserRoles().getRole().getName() != null
-				&& user.getUserRoles().getRole().getName().equals("sponser")) {
-			model.addAttribute("isSponser", true);
-		}*/
 		Wallet wallet = customDAO.findWalletByUserId(user.getId());
 		model.addAttribute("walletBalance", wallet.getBalance());
 		model.addAttribute("username", user.getUsername());
@@ -407,7 +398,6 @@ public class ContestController {
 				model.addAttribute("contestList", contestList);
 				break;
 			case "judge" :
-				//get reviews
 				ArrayList<JudgeReview> judgeReviewList = customDAO.listJudgeReviewsByJudge(user.getId());
 				model.addAttribute("judgeReviewList", judgeReviewList);
 				break;
@@ -417,7 +407,7 @@ public class ContestController {
 				break;
 		}
 
-		return "sponsorProfilePage";
+		return "profilePage";
 	}
 
 	@GetMapping("/profile/{judgeUserId}")
@@ -466,7 +456,7 @@ public class ContestController {
 	public String submitReview(@ModelAttribute("judgeReview") JudgeReview judgeReview, @AuthenticationPrincipal User user, Model model) {
 		JudgeReview existingJudgeReview = customDAO.findByJudgeReviewByJudgeIdAndSponserId(judgeReview.getJudgeUserId(), judgeReview.getSponserUserId());
 		if (existingJudgeReview != null) {
-			customDAO.updateJudgeReview(judgeReview.getJudgeUserId(), judgeReview.getReviewScore());
+			customDAO.updateJudgeReview(judgeReview.getJudgeUserId(), judgeReview.getSponserUserId(), judgeReview.getReviewScore());
 		} else {
 			customDAO.saveJudgeReview(judgeReview);
 		}
@@ -479,5 +469,14 @@ public class ContestController {
 		model.addAttribute("contestantList", contestantList);
 
 		return "leaderboard";
+	}
+
+	@GetMapping(value = "/deleteJudgeReview/{judgeUserId}/{sponserUserId}")
+	public String deleteJudgeReview(HttpServletRequest request, Model model, @PathVariable Long judgeUserId, @PathVariable Long sponserUserId) {
+		JudgeReview existingJudgeReview = customDAO.findByJudgeReviewByJudgeIdAndSponserId(judgeUserId, sponserUserId);
+		if (existingJudgeReview != null) {
+			customDAO.deleteJudgeReview(judgeUserId, sponserUserId);
+		}
+		return "redirect:/contestList";
 	}
 }

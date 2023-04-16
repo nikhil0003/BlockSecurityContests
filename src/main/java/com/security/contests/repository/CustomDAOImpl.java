@@ -713,11 +713,21 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	@Override
-	public int updateJudgeReview(Long judgeUserId, Long reviewScore) {
-		final String sql = "UPDATE judge_review SET review_score = ? where judge_user_id = ?";
+	public int updateJudgeReview(Long judgeUserId, Long sponserUserId, Long reviewScore) {
+		final String sql = "UPDATE judge_review SET review_score = ? where judge_user_id = ? and sponser_user_id = ?";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, reviewScore);
 		query.setParameter(2, judgeUserId);
+		query.setParameter(3, sponserUserId);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int deleteJudgeReview(Long judgeUserId, Long sponserUserId) {
+		final String sql = "DELETE from judge_review where judge_user_id = ? and sponser_user_id = ?";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, judgeUserId);
+		query.setParameter(2, sponserUserId);
 		return query.executeUpdate();
 	}
 

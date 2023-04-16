@@ -155,6 +155,11 @@ input[type=submit]:hover {
 				class="submit">submit</button>
 		</form>
 	</div>
+	<div class="container">
+		<form th:object="${judgeReview}"  th:action="@{'/deleteJudgeReview/' + ${judgeReview.judgeUserId} + '/' + ${judgeReview.sponserUserId}}" method="get">
+			<button type="submit" class="submit">Delete Review</button>
+		</form>
+	</div>
 
 	<form th:action="@{/logout}" method="post">
 		<button type="submit" class="submit">Logout</button>

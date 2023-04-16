@@ -94,7 +94,9 @@ public interface CustomDAO {
 
 	int saveJudgeReview(JudgeReview judgeReview);
 
-	int updateJudgeReview(Long judgeUserId, Long reviewScore);
+	int updateJudgeReview(Long judgeUserId, Long sponserUserId, Long reviewScore);
+
+	int deleteJudgeReview(Long judgeUserId, Long sponserUserId);
 
 	JudgeReview findByJudgeReviewByJudgeIdAndSponserId(Long judgeId, Long sponserId);
 
