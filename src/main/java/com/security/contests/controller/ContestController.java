@@ -130,6 +130,7 @@ public class ContestController {
 	@GetMapping("/dashboard")
 	public String getDashboard(Model model) {
 		List<User> bigSponsors = customDAO.getBigSponsers();
+		List<User> topJudges = customDAO.getTopJudges();
 		List<User> bigContestants = customDAO.getBigContestants();
 		List<Contest> commonContests = customDAO.getCommonContests(8L, 9L);
 		List<User> sleepyContestants = customDAO.getSleepyContestants();
@@ -138,6 +139,7 @@ public class ContestController {
 		List<User> contestants = customDAO.getContestants();
 
 		model.addAttribute("bigSponsors", bigSponsors);
+		model.addAttribute("topJudges", topJudges);
 		model.addAttribute("bigContestants", bigContestants);
 		model.addAttribute("commonContests", commonContests);
 		model.addAttribute("sleepyContestants", sleepyContestants);
@@ -448,7 +450,7 @@ public class ContestController {
 	public String submitReview(@ModelAttribute("judgeReview") JudgeReview judgeReview, @AuthenticationPrincipal User user, Model model) {
 		JudgeReview existingJudgeReview = customDAO.findByJudgeReviewByJudgeIdAndSponserId(judgeReview.getJudgeUserId(), judgeReview.getSponserUserId());
 		if (existingJudgeReview != null) {
-			customDAO.updateJudgeReview(judgeReview.getReview());
+			customDAO.updateJudgeReview(judgeReview.getJudgeUserId(), judgeReview.getReviewScore());
 		} else {
 			customDAO.saveJudgeReview(judgeReview);
 		}

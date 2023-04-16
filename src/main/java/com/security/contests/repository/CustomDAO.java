@@ -93,7 +93,7 @@ public interface CustomDAO {
 
 	int saveJudgeReview(JudgeReview judgeReview);
 
-	int updateJudgeReview(String review);
+	int updateJudgeReview(Long judgeUserId, Long reviewScore);
 
 	JudgeReview findByJudgeReviewByJudgeIdAndSponserId(Long judgeId, Long sponserId);
 
@@ -102,4 +102,6 @@ public interface CustomDAO {
 	ArrayList<JudgeReview> listJudgeReviewsByJudge(Long judgerUserId);
 
 	List<User> getContestantsSortedDescByRewardBalance();
+
+	List<User> getTopJudges();
 }

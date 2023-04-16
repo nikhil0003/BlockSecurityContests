@@ -155,6 +155,20 @@ submitButton {
 		</table>
 	</div>
 
+	<h2>Top Judges</h2>
+	<div class="container">
+		<table th:if="${ not#lists.isEmpty(topJudges)}" class="custom">
+			<tr>
+				<th>Judge User Id</th>
+				<th>Judge Name</th>
+			</tr>
+			<tr th:each="user : ${topJudges}">
+				<td th:text="${user.id}"></td>
+				<td th:text="${user.username}"></td>
+			</tr>
+		</table>
+	</div>
+
 	<h2>Big Contestants</h2>
 	<div class="container">
 		<table th:if="${ not#lists.isEmpty(bigContestants)}" class="custom">

@@ -703,19 +703,20 @@ public class CustomDAOImpl implements CustomDAO {
 
 	@Override
 	public int saveJudgeReview(JudgeReview judgeReview) {
-		final String sql = "INSERT INTO judge_review(judge_user_id,sponser_user_id,review) values(?,?,?)";
+		final String sql = "INSERT INTO judge_review(judge_user_id,sponser_user_id,review_score) values(?,?,?)";
 		Query query = em.createNativeQuery(sql);
 		query.setParameter(1, judgeReview.getJudgeUserId());
 		query.setParameter(2, judgeReview.getSponserUserId());
-		query.setParameter(3, judgeReview.getReview());
+		query.setParameter(3, judgeReview.getReviewScore());
 		return query.executeUpdate();
 	}
 
 	@Override
-	public int updateJudgeReview(final String review) {
-		final String sql = "UPDATE judge_review SET review = ?";
+	public int updateJudgeReview(Long judgeUserId, Long reviewScore) {
+		final String sql = "UPDATE judge_review SET review_score = ? where judge_user_id = ?";
 		Query query = em.createNativeQuery(sql);
-		query.setParameter(1, review);
+		query.setParameter(1, reviewScore);
+		query.setParameter(2, judgeUserId);
 		return query.executeUpdate();
 	}
 
@@ -737,7 +738,7 @@ public class CustomDAOImpl implements CustomDAO {
 				jr.setId((Long) ob[0]);
 				jr.setJudgeUserId((Long) ob[1]);
 				jr.setSponserUserId((Long) ob[2]);
-				jr.setReview((String) ob[3]);
+				jr.setReviewScore((Long) ob[3]);
 				return jr;
 			} else {
 				return null;
@@ -786,7 +787,7 @@ public class CustomDAOImpl implements CustomDAO {
 				jd.setId((Long) ob[0]);
 				jd.setJudgeUserId((Long) ob[1]);
 				jd.setSponserUserId((Long) ob[2]);
-				jd.setReview((String) ob[3]);
+				jd.setReviewScore((Long) ob[3]);
 				list.add(jd);
 			}
 			return list;
@@ -799,6 +800,17 @@ public class CustomDAOImpl implements CustomDAO {
 		final String contestantsQuery = "select ur.user_id from wallet w1, user_role ur \n" +
 				"where ur.user_id = w1.user_id and ur.role_id = 3 order by w1.balance desc";
 		Query q = em.createNativeQuery(contestantsQuery, Long.class);
+		List<Long> list = q.getResultList();
+		return getUsers(list);
+	}
+
+	@Override
+	public List<User> getTopJudges() {
+		final String topJudgesQuery = "select judge_user_id from judge_review\n" +
+				"group by judge_user_id having avg(review_score) = (select max(js.avg_score) from (select judge_user_id as judge_user_id, avg(review_score) as avg_score from judge_review\n" +
+				"group by judge_user_id) as js)\n" +
+				" order by avg(review_score)";
+		Query q = em.createNativeQuery(topJudgesQuery, Long.class);
 		List<Long> list = q.getResultList();
 		return getUsers(list);
 	}

@@ -125,7 +125,7 @@ CREATE TABLE `judge_review` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `judge_user_id` bigint DEFAULT NULL,
   `sponser_user_id` bigint DEFAULT NULL,
-  `review` varchar(255) DEFAULT NULL,
+  `review_score` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `judge_user_id` (`judge_user_id`),
   KEY `sponser_user_id` (`sponser_user_id`),

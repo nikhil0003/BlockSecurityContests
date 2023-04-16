@@ -23,7 +23,7 @@ public class JudgeReview {
 
 	private Long sponserUserId;
 
-	private String review;
+	private Long reviewScore;
 
 
 	public Long getId() {
@@ -50,11 +50,11 @@ public class JudgeReview {
 		this.sponserUserId = sponserUserId;
 	}
 
-	public String getReview() {
-		return review;
+	public Long getReviewScore() {
+		return reviewScore;
 	}
 
-	public void setReview(String review) {
-		this.review = review;
+	public void setReviewScore(Long reviewScore) {
+		this.reviewScore = reviewScore;
 	}
 }
