@@ -43,6 +43,8 @@ public interface CustomDAO {
 
 	ArrayList<Contest> listContestsBySponser(Long sponserUserId);
 
+	ArrayList<Contest> listContestsByContestant(Long contestantUserId);
+
 	Contest findByContestId(Long Id);
 
 	List<User> getContestants();
@@ -98,4 +100,6 @@ public interface CustomDAO {
 	Sponser findBySponserByUserId(Long userId);
 
 	ArrayList<JudgeReview> listJudgeReviewsByJudge(Long judgerUserId);
+
+	List<User> getContestantsSortedDescByRewardBalance();
 }

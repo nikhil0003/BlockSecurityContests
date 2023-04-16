@@ -213,6 +213,9 @@ a:hover {
 		<a th:if="${isAdmin}" th:href="@{/dashboard}">
 			<button type="submit">Dashboard</button>
 		</a>
+		<a th:href="@{/leaderboard}">
+			<button type="submit">Leaderboard</button>
+		</a>
 		<form th:action="@{/logout}" method="post">
 			<button type="submit" class="submit">Logout</button>
 		</form>

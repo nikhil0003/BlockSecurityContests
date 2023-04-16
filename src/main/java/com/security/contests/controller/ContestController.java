@@ -393,6 +393,10 @@ public class ContestController {
 				ArrayList<JudgeReview> judgeReviewList = customDAO.listJudgeReviewsByJudge(user.getId());
 				model.addAttribute("judgeReviewList", judgeReviewList);
 				break;
+			case "contestant" :
+				ArrayList<Contest> contestantContestList = customDAO.listContestsByContestant(user.getId());
+				model.addAttribute("contestantContestList", contestantContestList);
+				break;
 		}
 
 		return "sponsorProfilePage";
@@ -449,5 +453,13 @@ public class ContestController {
 			customDAO.saveJudgeReview(judgeReview);
 		}
 		return "redirect:/contestList";
+	}
+
+	@GetMapping("/leaderboard")
+	public String getLeaderboard(HttpServletRequest request, Model model, @AuthenticationPrincipal User user) {
+		List<User> contestantList = customDAO.getContestantsSortedDescByRewardBalance();
+		model.addAttribute("contestantList", contestantList);
+
+		return "leaderboard";
 	}
 }

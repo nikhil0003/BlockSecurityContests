@@ -276,6 +276,32 @@ public class CustomDAOImpl implements CustomDAO {
 	}
 
 	@Override
+	public ArrayList<Contest> listContestsByContestant(final Long contestantUserId) {
+		final String checkSql = "select count(*) from contestant ct inner join contest c on c.id = ct.contest_id where ct.user_id = ?";
+		Query checkquery = em.createNativeQuery(checkSql);
+		checkquery.setParameter(1, contestantUserId);
+		Long present = (Long) checkquery.getSingleResult();
+		if (present > 0L) {
+			final String sql = "select * from contestant ct inner join contest c on c.id = ct.contest_id where ct.user_id = ?";
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, contestantUserId);
+			List<Object> objList = query.getResultList();
+			ArrayList<Contest> list = new ArrayList<Contest>();
+			for (Object iter : objList) {
+				Object[] ob = (Object[]) iter;
+				Contest jd = new Contest();
+				jd.setId((Long) ob[5]);
+				jd.setName((String) ob[7]);
+				jd.setEndDate((Date) ob[6]);
+				jd.setStartDate((Date) ob[8]);
+				list.add(jd);
+			}
+			return list;
+		}
+		return null;
+	}
+
+	@Override
 	public Contest findByContestId(Long Id) {
 		final String checkSql = "select count(*) from contest where id = (?)";
 		Query checkquery = em.createNativeQuery(checkSql);
@@ -766,5 +792,14 @@ public class CustomDAOImpl implements CustomDAO {
 			return list;
 		}
 		return null;
+	}
+
+	@Override
+	public List<User> getContestantsSortedDescByRewardBalance() {
+		final String contestantsQuery = "select ur.user_id from wallet w1, user_role ur \n" +
+				"where ur.user_id = w1.user_id and ur.role_id = 3 order by w1.balance desc";
+		Query q = em.createNativeQuery(contestantsQuery, Long.class);
+		List<Long> list = q.getResultList();
+		return getUsers(list);
 	}
 }
