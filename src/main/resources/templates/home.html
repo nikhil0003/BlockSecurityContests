@@ -213,6 +213,41 @@ a:hover {
 		<a th:if="${isAdmin}" th:href="@{/dashboard}">
 			<button type="submit">Dashboard</button>
 		</a>
+		
+		<a th:if="${isAdmin}" th:href="@{/bigSponsors}">
+			<button type="submit">Big Sponsors</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/topJudges}">
+			<button type="submit">Top Judges</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/bigContestants}">
+			<button type="submit">Big Contestants</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/commonContests}">
+			<button type="submit">common Contests</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/sleepyContestants}">
+			<button type="submit">Sleepy Contestants</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/busyJudges}">
+			<button type="submit">Busy Judges</button>
+		</a>
+		<a th:if="${isAdmin}" th:href="@{/toughContests}">
+			<button type="submit">Tough Contests</button>
+		</a>
+		
+		<a th:if="${isAdmin}" th:href="@{/copycontestants}">
+			<button type="submit">Copy Contestants</button>
+		</a>
+		
+			<a th:if="${isAdmin}" th:href="@{/statistics}">
+			<button type="submit">Statistics</button>
+		</a>
+		
+		
+		
+		
+		
 		<a th:href="@{/leaderboard}">
 			<button type="submit">Leaderboard</button>
 		</a>
