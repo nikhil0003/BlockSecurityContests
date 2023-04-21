@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.security.contests.domain.Contest;
 import com.security.contests.domain.User;
 import com.security.contests.repository.CustomDAO;
 
-@RestController
+@Controller
 public class DashBoardController {
 
 	@Autowired
@@ -52,13 +52,7 @@ public class DashBoardController {
 		model.addAttribute("sleepyContestants", sleepyContestants);
 		return "sleepyContestants";
 	}
-	@GetMapping("/busyJudges")
-	public String getbusyJudges(Model model) {
-		List<User> busyJudges = customDAO.getBusyJudges();
-		model.addAttribute("busyJudges", busyJudges);
-		return "bigSponsors";
-	}
-	
+
 	
 	@GetMapping("/toughContests")
 	public String gettoughContests(Model model) {
