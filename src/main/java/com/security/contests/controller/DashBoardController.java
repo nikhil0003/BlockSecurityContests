@@ -52,7 +52,13 @@ public class DashBoardController {
 		model.addAttribute("sleepyContestants", sleepyContestants);
 		return "sleepyContestants";
 	}
-
+	@GetMapping("/busyJudges")
+	public String getbusyJudges(Model model) {
+		List<User> busyJudges = customDAO.getBusyJudges();
+		model.addAttribute("busyJudges", busyJudges);
+		return "busyJudges";
+	}
+	
 	
 	@GetMapping("/toughContests")
 	public String gettoughContests(Model model) {

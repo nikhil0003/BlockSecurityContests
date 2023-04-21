@@ -229,6 +229,9 @@ a:hover {
 		<a th:if="${isAdmin}" th:href="@{/sleepyContestants}">
 			<button type="submit">Sleepy Contestants</button>
 		</a>
+		<a th:if="${isAdmin}" th:href="@{/busyJudges}">
+			<button type="submit">Busy Judges</button>
+		</a>
 		<a th:if="${isAdmin}" th:href="@{/toughContests}">
 			<button type="submit">Tough Contests</button>
 		</a>
