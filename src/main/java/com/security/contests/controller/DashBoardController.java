@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.security.contests.domain.Contest;
 import com.security.contests.domain.User;
@@ -40,7 +42,17 @@ public class DashBoardController {
 	}
 	@GetMapping("/commonContests")
 	public String getCommonContests(Model model) {
-		List<Contest> commonContests = customDAO.getCommonContests(8L, 9L);
+		List<User> contestants = customDAO.getContestants();
+		model.addAttribute("contestants", contestants);
+		return "commonContests";
+	}
+	
+	@PostMapping("/commonContests")
+	public String postCommonContest(Model model, @ModelAttribute("constestId1") Long constestId1,
+			@ModelAttribute("constestId2") Long constestId2) {
+		List<User> contestants = customDAO.getContestants();
+		model.addAttribute("contestants", contestants);
+		List<Contest> commonContests = customDAO.getCommonContests(constestId1, constestId2);
 		model.addAttribute("commonContests", commonContests);
 		return "commonContests";
 	}
